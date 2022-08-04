@@ -174,7 +174,7 @@ class SoundTestMenu extends MusicBeatState
             */
             if (first == 12 && second == 25)
             {
-				trace(PlayState.SONG);
+
 
 
 
@@ -192,9 +192,29 @@ class SoundTestMenu extends MusicBeatState
 				LoadingState.loadAndSwitchState(new PlayState());
 				});
             }
+            else if (first == 66 && second == 6)
+                {
+    
+    
+    
+    
+    
+                                   
+                    
+                    PlayState.SONG = Song.loadFromJson('sunshine-hard', 'sunshine');
+                    PlayState.isStoryMode = false;
+                    PlayState.storyDifficulty = 2;
+                    PlayState.storyWeek = 1;
+                    FlxG.sound.play(Paths.sound('confirmMenu'));
+                    persistentUpdate = true;
+                    new FlxTimer().start(1, function(tmr:FlxTimer)
+                    {
+                    LoadingState.loadAndSwitchState(new PlayState());
+                    });
+                }
             else if (first == 7 && second == 7)
                 {
-                    trace(PlayState.SONG);
+
     
     
     

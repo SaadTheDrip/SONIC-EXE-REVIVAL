@@ -156,6 +156,8 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 
+
+
 	public var spawnTime:Float = 2000;
 
 	public var vocals:FlxSound;
@@ -277,6 +279,8 @@ class PlayState extends MusicBeatState
 	var warning:FlxSprite;
 	var dodgething:FlxSprite;
 
+
+
 	//majin sonic funny haha
 	var fgmajin:BGSprite;
 	var fgmajin2:BGSprite;
@@ -290,6 +294,8 @@ class PlayState extends MusicBeatState
 	var deezNuts:Array<Int> = [4, 5];
 	var ballsinyojaws:Int = 0;
 	var ezTrail:FlxTrail;
+
+
 	// - song start intro bullshit
 	var blackFuck:FlxSprite;
 	var blackFuck2:FlxSprite;
@@ -852,7 +858,7 @@ class PlayState extends MusicBeatState
 			add(Sky);
 
 
-			var FreddyFastBearFloor:BGSprite = new BGSprite('xterion/floor', -400, 650, 1, 1);
+			var FreddyFastBearFloor:BGSprite = new BGSprite('xterion/floor', -300, 830, 1, 1);
 			FreddyFastBearFloor.setGraphicSize(Std.int(FreddyFastBearFloor.width * 1.75));
 			FreddyFastBearFloor.updateHitbox();
 			add(FreddyFastBearFloor);
