@@ -212,6 +212,26 @@ class SoundTestMenu extends MusicBeatState
                     LoadingState.loadAndSwitchState(new PlayState());
                     });
                 }
+            else if (first == 0 && second == 0)
+                {
+    
+    
+    
+    
+    
+                                   
+                    
+                    PlayState.SONG = Song.loadFromJson('too-fest-hard', 'too-fest');
+                    PlayState.isStoryMode = false;
+                    PlayState.storyDifficulty = 2;
+                    PlayState.storyWeek = 1;
+                    FlxG.sound.play(Paths.sound('confirmMenu'));
+                    persistentUpdate = true;
+                    new FlxTimer().start(1, function(tmr:FlxTimer)
+                    {
+                    LoadingState.loadAndSwitchState(new PlayState());
+                    });
+                }                
             else if (first == 7 && second == 7)
                 {
 

@@ -317,7 +317,12 @@ class PlayState extends MusicBeatState
 	var sunker:FlxSprite;
 	var spoOoOoOky:FlxSprite;
 
-
+	// - flying shit
+	var flyTarg:Character;
+	var flyState:String = '';
+	var floaty:Float = 0;
+	var floaty2:Float = 0;
+	var tailscircle:String = '';
 
 	var upperBoppers:BGSprite;
 	var bottomBoppers:BGSprite;
@@ -3147,6 +3152,26 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+
+	function removeStatics()
+		{
+			playerStrums.forEach(function(todel:StrumNote)
+			{
+				playerStrums.remove(todel);
+				todel.destroy();
+			});
+			opponentStrums.forEach(function(todel:StrumNote)
+			{
+				opponentStrums.remove(todel);
+				todel.destroy();
+			});
+			strumLineNotes.forEach(function(todel:StrumNote)
+			{
+				strumLineNotes.remove(todel);
+				todel.destroy();
+			});
+		}
+		
 	override function openSubState(SubState:FlxSubState)
 	{
 		if (paused)
@@ -5527,6 +5552,8 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.fadeTween = null;
 	}
 
+
+	
 	var lastStepHit:Int = -1;
 	override function stepHit()
 	{
@@ -5537,6 +5564,22 @@ class PlayState extends MusicBeatState
 			resyncVocals();
 		}
 
+		if(curSong == 'endless'){
+			switch(curStep){
+				case 1:
+					timeBar.createFilledBar(0xFF000000, 0xFF5f41a1);
+					timeBar.updateBar();
+				case 886:
+					FlxTween.tween(camHUD, {alpha: 0}, 0.5);
+
+				case 900:
+					removeStatics();
+					generateStaticArrows(0);
+					generateStaticArrows(1);
+					FlxTween.tween(camHUD, {alpha: 1}, 0.5);
+			}
+		}
+
 		if(curStep == lastStepHit) {
 			return;
 		}
@@ -5545,6 +5588,10 @@ class PlayState extends MusicBeatState
 
 
 		lastStepHit = curStep;
+
+	
+
+
 		setOnLuas('curStep', curStep);
 		callOnLuas('onStepHit', []);
 	}
@@ -5868,6 +5915,9 @@ class PlayState extends MusicBeatState
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
 
+
+
+	
 	override function switchTo(state:FlxState){
 		// DO CLEAN-UP HERE!!
 		if(curSong == 'fatality'){
