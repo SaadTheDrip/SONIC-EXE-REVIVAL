@@ -267,6 +267,10 @@ class PlayState extends MusicBeatState
 	var fgTrees:BGSprite;
 	var genesis:FlxTypedGroup<FlxSprite>;
 
+	// because i need it
+	var FreddyFastBearFloor:BGSprite;
+
+
 	//feetway
 	var wall:FlxSprite;
 	var porker:FlxSprite;
@@ -858,7 +862,7 @@ class PlayState extends MusicBeatState
 			add(Sky);
 
 
-			var FreddyFastBearFloor:BGSprite = new BGSprite('xterion/floor', -300, 830, 1, 1);
+			FreddyFastBearFloor = new BGSprite('xterion/floor', -300, 830, 1, 1);
 			FreddyFastBearFloor.setGraphicSize(Std.int(FreddyFastBearFloor.width * 1.75));
 			FreddyFastBearFloor.updateHitbox();
 			add(FreddyFastBearFloor);
