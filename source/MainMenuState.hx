@@ -36,6 +36,7 @@ class MainMenuState extends MusicBeatState
 		'story_mode',
 		'freeplay',
 		'soundtest',
+		'encore',
 		#if MODS_ALLOWED 'mods', #end
 		#if ACHIEVEMENTS_ALLOWED 'awards', #end
 		'credits',
@@ -244,11 +245,12 @@ class MainMenuState extends MusicBeatState
 									case 'story_mode':
 										MusicBeatState.switchState(new StoryMenuState());
 									case 'freeplay':
-										MusicBeatState.switchState(new FreeplayState());
+										MusicBeatState.switchState(new FreeplayState());								
 									case 'soundtest':
 										LoadingState.loadAndSwitchState(new SoundTestMenu());
-									case 'awards':
-										MusicBeatState.switchState(new AchievementsMenuState());
+									
+	
+
 									case 'credits':
 										MusicBeatState.switchState(new CreditsState());
 									case 'options':
