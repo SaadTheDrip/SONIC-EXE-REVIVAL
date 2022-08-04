@@ -93,7 +93,9 @@ class ChartingState extends MusicBeatState
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
 		['Set Property', "Value 1: Variable name\nValue 2: New value"],
-		['GreenHill', "Value 1: true or false (only works in ycr stage)"]
+		['Genesis', "Value 1: 1 = true or 2 = false (only works in ycr stage)"],
+		['RedVG', "it just does something"],
+		['Majin count', "3 2 1 go fuck yourself"]
 	];
 
 	var _file:FileReference;

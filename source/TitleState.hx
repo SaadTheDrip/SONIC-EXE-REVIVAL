@@ -64,6 +64,8 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
+
+	var code:Int = 0;
 	
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
@@ -490,7 +492,23 @@ class TitleState extends MusicBeatState
 				titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
 			}
 			
-			if(pressedEnter)
+			if (pressedEnter && code == 4)
+				{
+		
+
+					PlayState.SONG = Song.loadFromJson('hard', 'milk');
+					PlayState.storyDifficulty = 2;
+					PlayState.instance.persistentUpdate = false;
+		
+					new FlxTimer().start(1, function(tmr:FlxTimer)
+						{
+						
+							LoadingState.loadAndSwitchState(new PlayState());
+
+						});		
+
+				}
+			else if(pressedEnter)
 			{
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
@@ -512,8 +530,10 @@ class TitleState extends MusicBeatState
 					}
 					closedState = true;
 				});
+
 				// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 			}
+
 			#if TITLE_SCREEN_EASTER_EGG
 			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE)
 			{
@@ -571,11 +591,42 @@ class TitleState extends MusicBeatState
 			skipIntro();
 		}
 
+		if (FlxG.keys.justPressed.UP)
+			if (code == 0)
+				code = 1;
+
+			else
+				code == 0;
+
+		if (FlxG.keys.justPressed.DOWN)
+			if (code == 1)
+				code = 2;
+			else
+				code == 0;
+
+		if (FlxG.keys.justPressed.LEFT)
+			if (code == 2)
+				code = 3;
+			else
+				code == 0;
+
+		if (FlxG.keys.justPressed.RIGHT)
+			if (code == 3)
+				code = 4;
+
+			else
+				code == 0;
+
+		if (code == 4){
+			trace("code complete");
+		}
+
 		if(swagShader != null)
 		{
 			if(controls.UI_LEFT) swagShader.hue -= elapsed * 0.1;
 			if(controls.UI_RIGHT) swagShader.hue += elapsed * 0.1;
 		}
+
 
 		super.update(elapsed);
 	}

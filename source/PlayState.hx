@@ -277,6 +277,10 @@ class PlayState extends MusicBeatState
 	var warning:FlxSprite;
 	var dodgething:FlxSprite;
 
+	//majin sonic funny haha
+	var fgmajin:BGSprite;
+	var fgmajin2:BGSprite;
+
 	//variables for stuff (strumline spins, zoom bools, etc...) shit
 	public static var isFixedAspectRatio:Bool = false;
 	public var superZoomShit:Bool = false;
@@ -607,6 +611,29 @@ class PlayState extends MusicBeatState
 			Grass.updateHitbox();
 			add(Grass);
 
+						case 'endless-forest': // lmao
+				PlayState.SONG.splashSkin = 'noteSplashes';
+				var SKY:BGSprite = new BGSprite('FunInfiniteStage/sonicFUNsky', -600, -200, 1.0, 1.0);
+				add(SKY);
+
+				var bush:BGSprite = new BGSprite('FunInfiniteStage/Bush 1', -42, 171, 1.0, 1.0);
+				add(bush);
+
+				var pillars2:BGSprite = new BGSprite('FunInfiniteStage/Majin Boppers Back', 182, -100, 1.0, 1.0, ['MajinBop2 instance 1'], true);
+				add(pillars2);
+
+				var bush2:BGSprite = new BGSprite('FunInfiniteStage/Bush2', 132, 354, 1.0, 1.0);
+				add(bush2);
+
+				var pillars1:BGSprite = new BGSprite('FunInfiniteStage/Majin Boppers Front', -169, -167, 1.0, 1.0, ['MajinBop1 instance 1'], true);
+				add(pillars1);
+
+				var floor:BGSprite = new BGSprite('FunInfiniteStage/floor BG', -340, 660, 1.0, 1.0);
+				add(floor);
+
+				fgmajin = new BGSprite('FunInfiniteStage/majin FG1', 1126, 903, 1.0, 1.0, ['majin front bopper1'], true);
+
+				fgmajin2 = new BGSprite('FunInfiniteStage/majin FG2', -393, 871, 1.0, 1.0, ['majin front bopper2'], true);
 
 			case 'cant-run-xd': // HOLY FUCK I AM HAVING SEXUAL INTERCOURSE WITH YOUR MOM!!!!!!!!!!!!
 				genesis = new FlxTypedGroup<FlxSprite>();
@@ -628,7 +655,7 @@ class PlayState extends MusicBeatState
 				var topoverlay:BGSprite = new BGSprite('run/TopOverlay', -600, -200, 1.0, 1.0);
 				genesis.add(topoverlay);
 
-				pickle = new FlxSprite(-428.5 + 50 + 700, -449.35 + 25 + 392 + 905).loadGraphic(Paths.image("run/GreenHill", 'exe'));
+				pickle = new FlxSprite(-428.5 + 50 + 900, -449.35 + 25 + 392 + 405).loadGraphic(Paths.image("run/GreenHill", 'exe'));
 				pickle.visible = false;
 				pickle.scrollFactor.set(1, 1);
 				pickle.active = false;
@@ -3758,8 +3785,10 @@ class PlayState extends MusicBeatState
 		return pressed;
 	}
 
-	public function triggerEventNote(eventName:String, value1:String, value2:String) {
-		switch(eventName) {
+	public function triggerEventNote(eventName:String, value1:String, value2:String) 
+		{
+			switch(eventName) 
+			{
 			case 'Dadbattle Spotlight':
 				var val:Null<Int> = Std.parseInt(value1);
 				if(val == null) val = 0;
@@ -3794,7 +3823,7 @@ class PlayState extends MusicBeatState
 						}});
 				}
 
-			case 'GreenHill':
+			case 'Genesis':
 				var value:Int = Std.parseInt(value1);
 				if (Math.isNaN(value))
 					value = 0;
@@ -3807,12 +3836,7 @@ class PlayState extends MusicBeatState
 						genesis.visible = false;
 
 						isPixelStage = true;
-						// dad.x = 100;
-						dad.setPosition(70, 350);
-						dad.y -= 155;
-						boyfriend.setPosition(530 + 100, 170 + 200);
-						gf.x = 400;
-						gf.y = 130;
+
 						reloadHealthBarColors();
 
 						healthBar.x += 150;
@@ -3825,23 +3849,48 @@ class PlayState extends MusicBeatState
 						defaultCamZoom = 0.65;
 						isPixelStage = false;
 
-						generateStaticArrows(0);
-						generateStaticArrows(1);
 						//	chromOn = false;
 						pickle.visible = false;
 						//	filters.remove(ShadersHandler.scanline);
 						genesis.visible = true;
 
 						reloadHealthBarColors();
-						//	dad.x = 100;
-						//	dad.y = 50;
-						//	boyfriend.x = 800;
-						//	boyfriend.y = 20;
+
 						healthBar.x -= 150;
 						iconP1.x -= 150;
 						iconP2.x -= 150;
 						healthBarBG.x -= 150;
 				}
+				case 'RedVG':
+					// ty maliciousbunny, i stole this from you but eh you wrote it in v2 so its fiiiiiiiiiiiine
+					var vg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('RedVG', 'exe'));
+					vg.alpha = 0;
+					vg.cameras = [camHUD];
+					add(vg);
+	
+					// now that we can pause it, why not just yknow
+	
+					FlxTween.tween(vg, {alpha: 1}, 0.85, {type: FlxTweenType.PINGPONG});
+					case 'Majin count':
+						switch (Std.parseFloat(value1))
+						{
+							case 1:
+								inCutscene = true;
+								camFollow.set(FlxG.width / 2 + 50, FlxG.height / 4 * 3 + 280);
+								FlxTween.tween(FlxG.camera, {zoom: FlxG.camera.zoom + 0.3}, 0.7, {ease: FlxEase.cubeInOut});
+								majinSaysFuck(4);
+							case 2:
+								FlxTween.tween(FlxG.camera, {zoom: FlxG.camera.zoom + 0.3}, 0.7, {ease: FlxEase.cubeInOut});
+								majinSaysFuck(3);
+							case 3:
+								FlxTween.tween(FlxG.camera, {zoom: FlxG.camera.zoom + 0.3}, 0.7, {ease: FlxEase.cubeInOut});
+								majinSaysFuck(2);
+							case 4:
+								inCutscene = false;
+								FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.7, {ease: FlxEase.cubeInOut});
+								majinSaysFuck(1);
+						}
+				
 
 			case 'Hey!':
 				var value:Int = 2;
@@ -3987,6 +4036,10 @@ class PlayState extends MusicBeatState
 
 			case 'Kill Henchmen':
 				killHenchmen();
+
+		
+		
+
 
 			case 'Add Camera Zoom':
 				if(ClientPrefs.camZooms && FlxG.camera.zoom < 1.35) {
@@ -4187,6 +4240,10 @@ class PlayState extends MusicBeatState
 					FunkinLua.setVarInArray(this, value1, value2);
 				}
 		}
+	
+
+		
+				
 		callOnLuas('onEvent', [eventName, value1, value2]);
 	}
 
@@ -5119,6 +5176,78 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
+	function majinSaysFuck(numb:Int):Void
+		{
+			switch(numb)
+			{
+				case 4:
+					var three:FlxSprite = new FlxSprite().loadGraphic(Paths.image('three', 'exe'));
+					three.scrollFactor.set();
+					three.updateHitbox();
+					three.screenCenter();
+					three.y -= 100;
+					three.alpha = 0.5;
+					three.cameras = [camOther];
+					add(three);
+					FlxTween.tween(three, {y: three.y + 100, alpha: 0, "scale.x": 1.05, "scale.y": 1.05}, Conductor.crochet / 1000, {
+						ease: FlxEase.cubeOut,
+						onComplete: function(twn:FlxTween)
+						{
+							three.destroy();
+						}
+					});
+				case 3:
+					var two:FlxSprite = new FlxSprite().loadGraphic(Paths.image('two', 'exe'));
+					two.scrollFactor.set();
+					two.screenCenter();
+					two.y -= 100;
+					two.alpha = 0.5;
+					two.cameras = [camOther];
+					add(two);
+					FlxTween.tween(two, {y: two.y + 100, alpha: 0, "scale.x": 1.05, "scale.y": 1.05}, Conductor.crochet / 1000, {
+						ease: FlxEase.cubeOut,
+						onComplete: function(twn:FlxTween)
+						{
+							two.destroy();
+						}
+					});
+				case 2:
+					var one:FlxSprite = new FlxSprite().loadGraphic(Paths.image('one', 'exe'));
+					one.scrollFactor.set();
+					one.screenCenter();
+					one.y -= 100;
+					one.alpha = 0.5;
+					one.cameras = [camOther];
+
+					add(one);
+					FlxTween.tween(one, {y: one.y + 100, alpha: 0, "scale.x": 1.05, "scale.y": 1.05}, Conductor.crochet / 1000, {
+						ease: FlxEase.cubeOut,
+						onComplete: function(twn:FlxTween)
+						{
+							one.destroy();
+						}
+					});
+				case 1:
+					var gofun:FlxSprite = new FlxSprite().loadGraphic(Paths.image('gofun', 'shared'));
+					gofun.scrollFactor.set();
+
+					gofun.updateHitbox();
+
+					gofun.screenCenter();
+					gofun.y -= 100;
+					gofun.alpha = 0.5;
+
+					add(gofun);
+					FlxTween.tween(gofun, {y: gofun.y + 100, alpha: 0, "scale.x": 1.05, "scale.y": 1.05}, Conductor.crochet / 1000, {
+						ease: FlxEase.cubeInOut,
+						onComplete: function(twn:FlxTween)
+						{
+							gofun.destroy();
+						}
+					});
+			}
+
+		}
 
 	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
 		var skin:String = 'noteSplashes';
