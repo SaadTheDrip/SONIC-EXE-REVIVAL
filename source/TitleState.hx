@@ -494,7 +494,6 @@ class TitleState extends MusicBeatState
 			
 			if (pressedEnter && code == 4)
 				{
-					var poop:String = ('hard');
 					
 					trace(PlayState.SONG);
 
@@ -502,6 +501,7 @@ class TitleState extends MusicBeatState
 					PlayState.isStoryMode = false;
 					PlayState.storyDifficulty = 2;
 					PlayState.storyWeek = 1;
+					FlxG.sound.play(Paths.sound('confirmMenu'));
 					persistentUpdate = true;
 					new FlxTimer().start(1, function(tmr:FlxTimer)
 					{
