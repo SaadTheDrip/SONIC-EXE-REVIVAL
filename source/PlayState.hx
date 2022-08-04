@@ -626,7 +626,7 @@ class PlayState extends MusicBeatState
 			Grass.updateHitbox();
 			add(Grass);
 
-						case 'endless-forest': // lmao
+			case 'endless-forest': // lmao
 				PlayState.SONG.splashSkin = 'noteSplashes';
 				var SKY:BGSprite = new BGSprite('FunInfiniteStage/sonicFUNsky', -600, -200, 1.0, 1.0);
 				add(SKY);
@@ -707,7 +707,7 @@ class PlayState extends MusicBeatState
 				var topoverlay:BGSprite = new BGSprite('run/TopOverlay', -600, -200, 1.0, 1.0);
 				genesis.add(topoverlay);
 
-				pickle = new FlxSprite(-428.5 + 50 + 900, -449.35 + 25 + 392 + 405).loadGraphic(Paths.image("run/GreenHill", 'exe'));
+				pickle = new FlxSprite(-428.5 + 50 + 900, -449.35 + 25 + 392 + 105).loadGraphic(Paths.image("run/GreenHill", 'exe'));
 				pickle.visible = false;
 				pickle.scrollFactor.set(1, 1);
 				pickle.active = false;
@@ -3171,7 +3171,7 @@ class PlayState extends MusicBeatState
 				todel.destroy();
 			});
 		}
-		
+
 	override function openSubState(SubState:FlxSubState)
 	{
 		if (paused)

@@ -15,7 +15,7 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 
 
-#if Desktop
+#if sys
 import Discord.DiscordClient;
 #end
 
@@ -252,7 +252,13 @@ class SoundTestMenu extends MusicBeatState
                     LoadingState.loadAndSwitchState(new PlayState());
                     });
                 }
+            else {
 
+
+
+                FlxG.sound.play(Paths.sound('deniedMOMENT'));
+
+            }
 
 
 
