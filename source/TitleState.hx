@@ -494,19 +494,19 @@ class TitleState extends MusicBeatState
 			
 			if (pressedEnter && code == 4)
 				{
-		
+					var poop:String = ('hard');
+					
+					trace(PlayState.SONG);
 
-					PlayState.SONG = Song.loadFromJson('hard', 'milk');
+					PlayState.SONG = Song.loadFromJson('milk', 'milk');
+					PlayState.isStoryMode = false;
 					PlayState.storyDifficulty = 2;
-					PlayState.instance.persistentUpdate = false;
-		
+					PlayState.storyWeek = 1;
+					persistentUpdate = true;
 					new FlxTimer().start(1, function(tmr:FlxTimer)
-						{
-						
-							LoadingState.loadAndSwitchState(new PlayState());
-
-						});		
-
+					{
+					LoadingState.loadAndSwitchState(new PlayState());
+					});
 				}
 			else if(pressedEnter)
 			{

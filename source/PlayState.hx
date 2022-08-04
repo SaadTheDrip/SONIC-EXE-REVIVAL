@@ -1156,7 +1156,8 @@ class PlayState extends MusicBeatState
 		if (isFixedAspectRatio)
 		{
 			camOther.x -= 50; // Best fix ever 2022 (it's just for centering the camera lawl)
-			camHUD.x -= 60; // Best fix ever 2022 (it's just for centering the camera lawl)
+			camHUD.x -= 30; // Best fix ever 2022 (it's just for centering the camera lawl)
+
 			Lib.application.window.resizable = false;
 			FlxG.scaleMode = new StageSizeScaleMode();
 			FlxG.resizeGame(960, 720);
