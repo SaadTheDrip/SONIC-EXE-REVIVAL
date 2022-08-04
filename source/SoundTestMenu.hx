@@ -15,7 +15,7 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 
 
-#if windows
+#if Desktop
 import Discord.DiscordClient;
 #end
 
