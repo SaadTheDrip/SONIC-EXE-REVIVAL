@@ -1,0 +1,89 @@
+{
+	"animations": [
+		{
+			"loop": false,
+			"offsets": [
+				0,
+				49
+			],
+			"anim": "idle",
+			"fps": 24,
+			"name": "enraged idle",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				28,
+				218
+			],
+			"anim": "singleft",
+			"fps": 24,
+			"name": "enraged left",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				-89,
+				151
+			],
+			"anim": "singRIGHT",
+			"fps": 24,
+			"name": "enraged right",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				-15,
+				315
+			],
+			"anim": "singUP",
+			"fps": 24,
+			"name": "enraged up",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				95,
+				111
+			],
+			"anim": "singDOWN",
+			"fps": 24,
+			"name": "enraged down",
+			"indices": []
+		},
+		{
+			"offsets": [
+				9,
+				193
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "enraged left"
+		}
+	],
+	"no_antialiasing": false,
+	"image": "characters/metal",
+	"position": [
+		0,
+		290
+	],
+	"healthicon": "dad",
+	"flip_x": false,
+	"healthbar_colors": [
+		60,
+		60,
+		255
+	],
+	"camera_position": [
+		0,
+		0
+	],
+	"sing_duration": 4,
+	"scale": 1
+}
