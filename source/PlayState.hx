@@ -271,6 +271,7 @@ class PlayState extends MusicBeatState
 	var FreddyFastBearFloor:BGSprite;
 
 
+
 	//feetway
 	var wall:FlxSprite;
 	var porker:FlxSprite;
@@ -715,7 +716,28 @@ class PlayState extends MusicBeatState
 				pickle.scale.y = 8;
 				add(genesis);
 				add(pickle);
-	
+
+			
+			case 'sanicStage':
+				var bg:BGSprite = new BGSprite('sanicbg', -370, -130, 1.0, 1.0);
+				bg.setGraphicSize(Std.int(bg.width * 1.2));
+				add(bg);
+
+
+
+			case 'CYS': 
+				
+				var Fire:BGSprite = new BGSprite('CYS/Fire', 400, 200, 1.0, 1.0, ['Symbol 1'], true);
+				Fire.setGraphicSize(Std.int(Fire.width * 7.5));
+				add(Fire);
+
+				var running:BGSprite = new BGSprite('CYS/FLOOR', -2500, 850, 1.0, 1.0, ['FLOOR REAL'], true);
+				running.antialiasing = false;
+				running.flipX = true;
+				running.setGraphicSize(Std.int(running.width * 5));
+				add(running);
+
+
 			case 'sunkStage':
 				PlayState.SONG.splashSkin = "milkSplashes";
 				var bg:BGSprite = new BGSprite('sunky/sunky BG', -300, -500, 0.9, 0.9);
@@ -1194,6 +1216,9 @@ class PlayState extends MusicBeatState
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank4', 1300, 900, 1.5, 1.5, ['fg']));
 				foregroundSprites.add(new BGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
+				
+			case 'xterion' | 'starved-pixel' | 'starved' | 'chamber' | 'sanicStage' | 'void' | 'fatality' | 'cycles-hills':
+				gfGroup.visible = false;
 		}
 
 
@@ -3929,10 +3954,10 @@ class PlayState extends MusicBeatState
 
 						reloadHealthBarColors();
 
-						healthBar.x -= 150;
-						iconP1.x -= 150;
-						iconP2.x -= 150;
-						healthBarBG.x -= 150;
+						healthBar.x -= 250;
+						iconP1.x -= 250;
+						iconP2.x -= 250;
+						healthBarBG.x -= 250;
 				}
 				case 'RedVG':
 					// ty maliciousbunny, i stole this from you but eh you wrote it in v2 so its fiiiiiiiiiiiine

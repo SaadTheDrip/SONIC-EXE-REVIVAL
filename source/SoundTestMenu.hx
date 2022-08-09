@@ -231,7 +231,27 @@ class SoundTestMenu extends MusicBeatState
                     {
                     LoadingState.loadAndSwitchState(new PlayState());
                     });
-                }                
+                }             
+            else if (first == 19 && second == 29)
+                {
+    
+    
+    
+    
+    
+                                   
+                    
+                    PlayState.SONG = Song.loadFromJson('confronting-yourself-hard', 'confronting-yourself');
+                    PlayState.isStoryMode = false;
+                    PlayState.storyDifficulty = 2;
+                    PlayState.storyWeek = 1;
+                    FlxG.sound.play(Paths.sound('confirmMenu'));
+                    persistentUpdate = true;
+                    new FlxTimer().start(1, function(tmr:FlxTimer)
+                    {
+                    LoadingState.loadAndSwitchState(new PlayState());
+                    });
+                }       				   
             else if (first == 7 && second == 7)
                 {
 
@@ -242,6 +262,26 @@ class SoundTestMenu extends MusicBeatState
                                    
                     
                     PlayState.SONG = Song.loadFromJson('cycles-hard', 'cycles');
+                    PlayState.isStoryMode = false;
+                    PlayState.storyDifficulty = 2;
+                    PlayState.storyWeek = 1;
+                    FlxG.sound.play(Paths.sound('confirmMenu'));
+                    persistentUpdate = true;
+                    new FlxTimer().start(1, function(tmr:FlxTimer)
+                    {
+                    LoadingState.loadAndSwitchState(new PlayState());
+                    });
+                }
+            else if (first == 8 && second == 21)
+                {
+
+    
+    
+    
+    
+                                   
+                    
+                    PlayState.SONG = Song.loadFromJson('chaos-hard', 'chaos');
                     PlayState.isStoryMode = false;
                     PlayState.storyDifficulty = 2;
                     PlayState.storyWeek = 1;
