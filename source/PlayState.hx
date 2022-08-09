@@ -1216,7 +1216,7 @@ class PlayState extends MusicBeatState
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank4', 1300, 900, 1.5, 1.5, ['fg']));
 				foregroundSprites.add(new BGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
-				
+
 			case 'xterion' | 'starved-pixel' | 'starved' | 'chamber' | 'sanicStage' | 'void' | 'fatality' | 'cycles-hills':
 				gfGroup.visible = false;
 		}
@@ -1709,7 +1709,8 @@ class PlayState extends MusicBeatState
 					if(gf != null) gf.playAnim('scared', true);
 					boyfriend.playAnim('scared', true);
 
-
+				case 'too-slow':
+					startVideo('tooslowcutscene1');
 
 
 				case "winter-horrorland":
@@ -2260,6 +2261,10 @@ class PlayState extends MusicBeatState
 		camFollow.set(dad.x + 280, dad.y + 170);
 		switch(songName)
 		{
+
+
+
+
 			case 'ugh':
 				cutsceneHandler.endTime = 12;
 				cutsceneHandler.music = 'DISTORTO';
