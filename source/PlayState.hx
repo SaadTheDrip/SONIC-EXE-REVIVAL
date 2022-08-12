@@ -262,6 +262,8 @@ class PlayState extends MusicBeatState
 	var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
 	var fastCar:BGSprite;
 
+
+
 	// sonic.exe (ycr/triple trouble)
 	var pickle:FlxSprite;
 	var fgTrees:BGSprite;
@@ -3342,6 +3344,8 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+
+		
 		/*if (FlxG.keys.justPressed.NINE)
 		{
 			iconP1.swapOldIcon();
@@ -5610,6 +5614,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+
 		if(curStep == lastStepHit) {
 			return;
 		}
@@ -5625,6 +5630,30 @@ class PlayState extends MusicBeatState
 		setOnLuas('curStep', curStep);
 		callOnLuas('onStepHit', []);
 	}
+
+	function festSpinFull()
+		{
+			strumLineNotes.forEach(function(tospin:FlxSprite)
+				{
+					FlxTween.angle(tospin, 0, 360, 0.2, {ease: FlxEase.quintOut});
+				});
+		}
+
+	function festSpinPlayer()
+		{
+			playerStrums.forEach(function(tospin:FlxSprite)
+				{
+					FlxTween.angle(tospin, 0, 360, 0.2, {ease: FlxEase.quintOut});
+				});
+		}
+
+	function festSpinOppenet()
+		{
+			opponentStrums.forEach(function(tospin:FlxSprite)
+				{
+					FlxTween.angle(tospin, 0, 360, 0.2, {ease: FlxEase.quintOut});
+				});
+		}
 
 	var lightningStrikeBeat:Int = 0;
 	var lightningOffset:Int = 8;
