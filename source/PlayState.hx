@@ -62,6 +62,7 @@ import openfl.Lib;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.BitmapFilter;
+import openfl.display.BitmapData;
 import openfl.utils.Assets as OpenFlAssets;
 import editors.ChartingState;
 import editors.CharacterEditorState;
@@ -263,6 +264,8 @@ class PlayState extends MusicBeatState
 	var fastCar:BGSprite;
 
 
+	//nebs modchart shit
+	var curShader:ShaderFilter;
 
 	// sonic.exe (ycr/triple trouble)
 	var pickle:FlxSprite;
@@ -1270,7 +1273,19 @@ class PlayState extends MusicBeatState
 				add(halloweenWhite);
 			case 'tank':
 				add(foregroundSprites);
-		}
+			case 'endless-forest':
+				var ok:BGSprite= new BGSprite('FunInfiniteStage', -600, -200, 1.1, 0.9);
+                ok.scale.x = 1.25;
+                ok.scale.y = 1.25;
+				ok.blend = LIGHTEN;
+				add(ok);
+
+				add(fgmajin);
+				add(fgmajin2);
+
+			case 'xterion' | 'starved-pixel' | 'starved' | 'chamber' | 'sanicStage' | 'void' | 'fatality' | 'cycles-hills':
+				gfGroup.visible = false;
+			}
 
 		#if LUA_ALLOWED
 		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();

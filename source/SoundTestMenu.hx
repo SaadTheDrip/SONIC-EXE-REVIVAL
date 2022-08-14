@@ -19,6 +19,10 @@ import lime.utils.Assets;
 import Discord.DiscordClient;
 #end
 
+#if VIDEOS_ALLOWED
+import vlc.MP4Handler;
+#end
+
 
 
 class SoundTestMenu extends MusicBeatState
@@ -231,7 +235,9 @@ class SoundTestMenu extends MusicBeatState
                     {
                     LoadingState.loadAndSwitchState(new PlayState());
                     });
-                }             
+                }       
+            
+
             else if (first == 19 && second == 29)
                 {
     
