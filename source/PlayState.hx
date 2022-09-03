@@ -269,6 +269,7 @@ class PlayState extends MusicBeatState
 
 	// sonic.exe (ycr/triple trouble)
 	var pickle:FlxSprite;
+	var pickle2:FlxSprite;
 	var fgTrees:BGSprite;
 	var genesis:FlxTypedGroup<FlxSprite>;
 
@@ -713,14 +714,25 @@ class PlayState extends MusicBeatState
 				var topoverlay:BGSprite = new BGSprite('run/TopOverlay', -600, -200, 1.0, 1.0);
 				genesis.add(topoverlay);
 
-				pickle = new FlxSprite(-428.5 + 50 + 900, -449.35 + 25 + 392 + 105).loadGraphic(Paths.image("run/GreenHill", 'exe'));
+				pickle = new BGSprite('PIXEL/BG', 100 - 500, 100, 1.0, 1.0, ['BG0'], true);
+				pickle.antialiasing = false;
 				pickle.visible = false;
 				pickle.scrollFactor.set(1, 1);
 				pickle.active = false;
 				pickle.scale.x = 8;
 				pickle.scale.y = 8;
+
+				pickle2 = new BGSprite('PIXEL/FG', 100 - 500, -215, 1.0, 1.0, ['FG0'], true);
+				pickle2.antialiasing = false;
+				pickle2.visible = false;
+				pickle2.scrollFactor.set(1, 1);
+				pickle2.active = false;
+				pickle2.scale.x = 8;
+				pickle2.scale.y = 8;
+
 				add(genesis);
 				add(pickle);
+				add(pickle2);
 
 			
 			case 'sanicStage':
@@ -3952,9 +3964,10 @@ class PlayState extends MusicBeatState
 				switch (value)
 				{
 					case 1:
-						defaultCamZoom = 0.9;
+						defaultCamZoom = 0.5;
 
 						pickle.visible = true;
+						pickle2.visible = true;
 						genesis.visible = false;
 
 						isPixelStage = true;
@@ -3973,6 +3986,7 @@ class PlayState extends MusicBeatState
 
 						//	chromOn = false;
 						pickle.visible = false;
+						pickle2.visible = false;
 						//	filters.remove(ShadersHandler.scanline);
 						genesis.visible = true;
 
