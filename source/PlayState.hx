@@ -714,11 +714,11 @@ class PlayState extends MusicBeatState
 				var topoverlay:BGSprite = new BGSprite('run/TopOverlay', -600, -200, 1.0, 1.0);
 				genesis.add(topoverlay);
 
-				pickle = new BGSprite('PIXEL/BG', 100 - 500, 100, 1.0, 1.0, ['BG0'], true);
+				pickle = new BGSprite('PIXEL/BG', 100 - 500, 100, 0.8, 0.8, ['BG0'], true);
 				pickle.antialiasing = false;
 				pickle.visible = false;
-				pickle.scrollFactor.set(1, 1);
-				pickle.active = false;
+				pickle.scrollFactor.set(0.8, 0.8);
+				pickle.active = true;
 				pickle.scale.x = 8;
 				pickle.scale.y = 8;
 
@@ -726,7 +726,7 @@ class PlayState extends MusicBeatState
 				pickle2.antialiasing = false;
 				pickle2.visible = false;
 				pickle2.scrollFactor.set(1, 1);
-				pickle2.active = false;
+				pickle2.active = true;
 				pickle2.scale.x = 8;
 				pickle2.scale.y = 8;
 
@@ -900,14 +900,14 @@ class PlayState extends MusicBeatState
 
 		case 'DDDDD':
 
-			var Sky:BGSprite = new BGSprite('xterion/sky', -845, -425 + 205, 0.9, 0.9);
+			var Sky:BGSprite = new BGSprite('xterion/sky', -500, 0, 1, 0.9);
 			Sky.setGraphicSize(Std.int(Sky.width * 2));
 			Sky.scrollFactor.set(1, 1);
 			add(Sky);
 
 
 			FreddyFastBearFloor = new BGSprite('xterion/floor', -300, 830, 1, 1);
-			FreddyFastBearFloor.setGraphicSize(Std.int(FreddyFastBearFloor.width * 1.75));
+			FreddyFastBearFloor.setGraphicSize(Std.int(FreddyFastBearFloor.width * 2));
 			FreddyFastBearFloor.updateHitbox();
 			add(FreddyFastBearFloor);
 
@@ -3964,7 +3964,9 @@ class PlayState extends MusicBeatState
 				switch (value)
 				{
 					case 1:
-						defaultCamZoom = 0.5;
+						defaultCamZoom = 0.9;
+
+						gfGroup.visible = false;
 
 						pickle.visible = true;
 						pickle2.visible = true;
@@ -3980,6 +3982,8 @@ class PlayState extends MusicBeatState
 						healthBarBG.x += 150;
 
 					case 2:
+
+						gfGroup.visible = true;
 
 						defaultCamZoom = 0.65;
 						isPixelStage = false;
