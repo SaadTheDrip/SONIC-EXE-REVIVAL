@@ -3194,8 +3194,7 @@ class PlayState extends MusicBeatState
 					skin = 'fatal';
 				if (SONG.player1 == "bf-fatal" && player == 1)
 					skin = 'week6';
-				if (isPixelStage = true)
-					skin = 'week6';
+
 	
 				if(SONG.song.toLowerCase()=='endless' && curStep>=900)skin='Majin_Notes';
 	
