@@ -236,7 +236,25 @@ class SoundTestMenu extends MusicBeatState
                     LoadingState.loadAndSwitchState(new PlayState());
                     });
                 }       
-            
+            else if (first == 1 && second == 13) // This for you div, R.I.P
+			{
+				woahmanstopspammin = false;
+				flashyWashy(true);
+				new FlxTimer().start(2, function(tmr:FlxTimer)
+				{
+					cameoImg.visible = true;
+					cameoImg.loadGraphic(Paths.image('cameostuff/divide'));
+					cameoImg.setSize(1280, 720);
+					flashyWashy(false);
+					FlxG.sound.music.stop();
+                    FlxG.sound.playMusic(Paths.music('divine'));
+	
+				});
+				new FlxTimer().start(2.1, function(tmr:FlxTimer)
+				{
+					incameo = true;
+				});
+			}
 
             else if (first == 19 && second == 29)
                 {

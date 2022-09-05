@@ -1,239 +1,297 @@
 package;
 
-import flixel.util.FlxTimer;
-import flixel.input.gamepad.FlxGamepad;
+#if desktop
+import Discord.DiscordClient;
+#end
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.tweens.FlxEase;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import lime.utils.Assets;
-
-
-#if windows
-import Discord.DiscordClient;
-#end
 
 using StringTools;
 
-class FreeplayState extends MusicBeatState // REWRITE FREEPLAY!?!?!? HELL YEA!!!!!
+class EncoreState extends MusicBeatState
 {
+	var tween:FlxTween;
+	var tween2:FlxTween;
+	private static var curSelected:Int = 0;
 
-
+	private var grpOptions:FlxTypedGroup<Alphabet>;
 	
-	var whiteshit:FlxSprite;
+	private var iconArray:Array<AttachedSprite> = [];
+	private static var canciones:Array<Dynamic> = [];
 
-	var curSelected:Int = 0;
+	private static var canciones0:Array<Dynamic> = [
+		['Its a me',		'its-a-me',         '1'],
+		['Golden Land',		'golden-land',      '2']
+	];
 
-	var songArray:Array<String> = ["endless", 'cycles', "milk", "sunshine", 'faker', 'black-sun', "chaos"];
+	private static var canciones1:Array<Dynamic> = [
+		['Its a me',		'its-a-me', '1'],
+		['Golden Land',		'golden-land', '2'],
+		['I Hate You',		'i-hate-you', '3'],
+		['Powerdown',		'powerdown', '4'],
+		['Apparition',		'apparition', '5'],
+		['Alone',		'alone', '6'],
+		['???',		'racetraitors', '0']
+	];
+
+	private static var canciones2:Array<Dynamic> = [ 
+		['Too Slow Encore',		'too-slow-encore', '1'],
+		["You Can't Run Encore",		'you-cant-run-encore', '2'],
+		['Triple Trouble Encore',		'Triple-Trouble-Encore', '3'],
+
+	];
+
+	var fuck:Int = 1;
+	var obo:Bool = false;
 
 	var boxgrp:FlxTypedSpriteGroup<FlxSprite>;
 
 	var bg:FlxSprite;
-
-	var cdman:Bool = true;
-
-	var fuck:Int = 0;
-
-
+	var cartel:FlxSprite;
+	var descText:FlxText;
+	var intendedColor:Int;
+	var colorTween:FlxTween;
+	var estatica:FlxSprite;
 
 	override function create()
 	{
-		whiteshit = new FlxSprite().makeGraphic(1280, 720, FlxColor.WHITE);
-		whiteshit.alpha = 0;
-
-		bg = new FlxSprite().loadGraphic(Paths.image('backgroundlool'));
-		bg.screenCenter();
-		bg.setGraphicSize(1280, 720);
-		add(bg);
-
-		boxgrp = new FlxTypedSpriteGroup<FlxSprite>();
-
-
-
-		if (FlxG.save.data.songArray.length != 0)
-		{
-			for (i in 0...songArray.length)
-			{
-
-				if (FlxG.save.data.songArray.contains(songArray[fuck]))
-				{
-			
-					FlxG.log.add(songArray[i] + ' found');
-	
-					var box:FlxSprite = new FlxSprite(fuck * 780, 0).loadGraphic(Paths.image('FreeBox'));
-					boxgrp.add(box);
-
-					var char:FlxSprite = new FlxSprite(fuck * 780, 0).loadGraphic(Paths.image('fpstuff/' + songArray[fuck].toLowerCase()));
-					boxgrp.add(char);
-
-					var daStatic:FlxSprite = new FlxSprite();		
-					daStatic.frames = Paths.getSparrowAtlas('daSTAT');	
-					daStatic.alpha = 0.2;	
-					daStatic.setGraphicSize(620, 465);			
-					daStatic.setPosition((fuck * 780) + 440, 211);	
-					daStatic.animation.addByPrefix('static','staticFLASH', 24, true);			
-					boxgrp.add(daStatic);
-					daStatic.animation.play('static');
-
-					fuck += 1;
-				}
-				else 
-				{
-					songArray.remove(songArray[fuck]);
-				}
-				
-			}
-		}
-		else songArray = ['lol'];
-
 
 		
+		#if desktop
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("In Freeplay", null);
+		#end
+
+		if (!FlxG.sound.music.playing)
+			{	
+				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			}
+
+		bg = new FlxSprite(0, 0).loadGraphic(Paths.image('backgroundlool'));
+		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.updateHitbox();
+		bg.screenCenter(XY);
+		add(bg);
+
+		estatica = new FlxSprite();
+		estatica.frames = Paths.getSparrowAtlas('modstuff/estatica_uwu');
+		estatica.animation.addByPrefix('idle', "Estatica papu", 15);
+		estatica.animation.play('idle');
+		estatica.antialiasing = false;
+		estatica.alpha = 0.3;
+		estatica.scrollFactor.set();
+		estatica.updateHitbox();
+		add(estatica);
+
+		grpOptions = new FlxTypedGroup<Alphabet>();
+		add(grpOptions);
+
+		if (canciones != canciones2)
+			{
+				canciones = canciones2;
+			}
+
+
+
+		boxgrp = new FlxTypedSpriteGroup<FlxSprite>();
+				for (i in 0...canciones.length)
+				{
+	
+					var char:FlxSprite = new FlxSprite(1000 * fuck , 100).loadGraphic(Paths.image('encorestuff/Char' + canciones[i][2]));
+
+					boxgrp.add(char);
+
+
+					fuck += 1;
+					
+				}
 		add(boxgrp);
 
-		 #if windows
-		 // Updating Discord Rich Presence
-		 DiscordClient.changePresence("In the Freeplay Menu", null);
-		 #end
 
-		add(whiteshit);
+		for (i in 0...canciones.length)
+		{
+			var isSelectable:Bool = !unselectableCheck(i);
+			var optionText:Alphabet = new Alphabet(0, 70 * i, canciones[i][0], !isSelectable, false);
+			optionText.isMenuItem = true;
+			optionText.screenCenter(X);
+			if(isSelectable) {
+				optionText.x -= 70;
+			}
+			optionText.forceX = optionText.x;
+			//optionText.yMult = 90;
+			optionText.targetY = i;
+			//grpOptions.add(optionText);
+		}
 
+		cartel = new FlxSprite(0, 20).loadGraphic(Paths.image('modstuff/freeplay/HUD_Freeplay_1'));
+		cartel.updateHitbox();
+		cartel.screenCenter(X);
+		cartel.antialiasing = ClientPrefs.globalAntialiasing;
+		add(cartel);
+		tween = FlxTween.tween(cartel, {y: 0}, 3, {ease: FlxEase.quadInOut, type: PINGPONG});
+
+		descText = new FlxText(50, 620, 1180, "", 32);
+		descText.setFormat(Paths.font("sonic-cd-menu-font.ttf"), 32, FlxColor.RED, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		descText.scrollFactor.set();
+		descText.updateHitbox();
+		descText.screenCenter(X);
+		descText.borderSize = 4.4;
+		add(descText);
+
+		changeSelection();
 		super.create();
 	}
 
-
+	var quieto:Bool = false;
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
+		if(!obo)
+			{
+				caminar();
+				obo = true;
+			}
+		estatica.animation.play('idle');
 
-		var upP = FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A;
-		var downP = FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D;
-		var accepted = controls.ACCEPT;
-		
-		
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
-		if (gamepad != null)
+		if (FlxG.sound.music.volume < 0.7)
 		{
-			if (gamepad.justPressed.DPAD_UP)
-			{
-				changeSelection(-1);
-			}
-			if (gamepad.justPressed.DPAD_DOWN)
-			{
-				changeSelection(1);
-			}
+			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
-		if (cdman)
+		var upP = controls.UI_LEFT_P;
+		var downP = controls.UI_RIGHT_P;
+
+        if(!quieto)
 		{
-			if (upP)
-			{
-				changeSelection(-1);
-			}
-			if (downP)
-			{
-				changeSelection(1);
-			}
-		}
-		
 
-		
-		if (controls.BACK)
+		if (upP)
 		{
-			FlxG.switchState(new MainMenuState());
-		}
-		
-		
-		if (accepted && cdman && songArray[0] != 'lol')
-		{
-			cdman = false;
-
-			switch (songArray[curSelected]) // Some charts don't include -hard in their file name so i decided to get focken lazy.
-			{
-				case "milk":
-					PlayState.SONG = Song.loadFromJson('milk', 'milk');
-				case "sunshine":
-					PlayState.SONG = Song.loadFromJson('sunshine', 'sunshine');
-				default:
-					PlayState.SONG = Song.loadFromJson(songArray[curSelected].toLowerCase() + '-hard', songArray[curSelected].toLowerCase());
-			}
-
-			PlayState.storyDifficulty = 2;
-			PlayState.storyWeek = 1;
-			FlxTween.tween(whiteshit, {alpha: 1}, 0.4);
-			FlxG.sound.play(Paths.sound('confirmMenu'));
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
-			new FlxTimer().start(2, function(tmr:FlxTimer)
-			{
-				LoadingState.loadAndSwitchState(new PlayState());
-			});
-		}
-		
-	}
-
-	
-	function changeSelection(change:Int = 0)
-	{
-
-		#if !switch
-		// NGio.logEvent('Fresh');
-		#end
-	
-		if (change == 1 && curSelected != songArray.length - 1) 
-		{
-			cdman = false;
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-			FlxTween.tween(boxgrp ,{x: boxgrp.x - 780}, 0.2, {ease: FlxEase.expoOut, onComplete: function(sus:FlxTween)
-				{
-					cdman = true;
-				}
-			});
+			changeSelection(-1);
+			caminar();
+			quieto = true;
 			
 		}
-		else if (change == -1 && curSelected != 0) 
+		if (downP)
 		{
-			cdman = false;
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-			FlxTween.tween(boxgrp ,{x: boxgrp.x + 780}, 0.2, {ease: FlxEase.expoOut, onComplete: function(sus:FlxTween)
-				{
-					cdman = true;
-				}
-			});
-
+			changeSelection(1);
+			caminar();
+			quieto = true;
 		}
+		if(controls.ACCEPT) {
+			quieto = true;
+			tween.cancel();
+			FlxG.sound.music.volume = 0;
+			PlayState.SONG = Song.loadFromJson(canciones[curSelected][1], canciones[curSelected][1]);
+			PlayState.campaignScore = 0;
+			PlayState.campaignMisses = 0;
+			LoadingState.loadAndSwitchState(new PlayState());
+			FlxG.sound.music.volume = 0;
+			FreeplayState.destroyFreeplayVocals();
+			  };
+	    }
 
-		curSelected += change;
-		if (curSelected < 0) curSelected = 0;
-		else if (curSelected > songArray.length - 1) curSelected = songArray.length - 1;
-		
-		// NGio.logEvent('Fresh');
-		
+		if (controls.BACK)
+		{
+			if(colorTween != null) {
+				colorTween.cancel();
+			}
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			MusicBeatState.switchState(new MainMenuState());
+		}
+	      super.update(elapsed);
+	}
 
-	 	
+	function changeSelection(change:Int = 0)
+	{
+		FlxG.sound.play(Paths.sound('scrollMenu'), 1); 
+
+		do {
+			curSelected += change;
+			if (curSelected < 0)
+				curSelected = canciones.length - 1;
+			if (curSelected >= canciones.length)
+				curSelected = 0;
+
+		} while(unselectableCheck(curSelected));
+
+		var bullShit:Int = 0;
+
+		for (item in grpOptions.members)
+		{
+			item.targetY = bullShit - curSelected;
+			bullShit++;
+
+			if(!unselectableCheck(bullShit-1)) {
+				item.alpha = 0.6;
+				if (item.targetY == 0) {
+					item.alpha = 1;
+				}
+			}
+		}
+		descText.text = canciones[curSelected][0];
 	}
 	
-}
+	private function unselectableCheck(num:Int):Bool {
+		return canciones[num].length <= 0;
+	}
 
-class SongMetadata
-{
-	public var songName:String = "";
-	public var week:Int = 0;
-	public var songCharacter:String = "";
-
-	public function new(song:String, week:Int, songCharacter:String)
+	private function caminar()
 	{
-		this.songName = song;
-		this.week = week;
-		this.songCharacter = songCharacter;
+		switch(curSelected){
+			case 0:
+				tween = FlxTween.tween(boxgrp, {x: -1000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+			case 1:
+				tween = FlxTween.tween(boxgrp, {x: -2000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+			case 2:
+				tween = FlxTween.tween(boxgrp, {x: -3000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+			case 3:
+				tween = FlxTween.tween(boxgrp, {x: -4000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+			case 4:
+				tween = FlxTween.tween(boxgrp, {x: -5000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+		  	case 5:
+				tween = FlxTween.tween(boxgrp, {x: -6000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+			case 6:
+				tween = FlxTween.tween(boxgrp, {x: -7000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+			case 7:
+				tween = FlxTween.tween(boxgrp, {x: -8000}, 0.2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween)
+					{
+						quieto = false;
+					}});
+		}
+		do {
+
+		} while(unselectableCheck(curSelected));
 	}
 }

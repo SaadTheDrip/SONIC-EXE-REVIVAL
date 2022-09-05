@@ -580,58 +580,69 @@ class PlayState extends MusicBeatState
 		switch (curStage)
 		{
 
-			case 'too-slow': 
-			var bg:BGSprite = new BGSprite('PolishedP1/BGSky', -345, -289 + 170, 0.9, 0.9);
-			bg.setGraphicSize(Std.int(bg.width * 2));
-			bg.scrollFactor.set(1, 1);
-			add(bg);
+			case 'too-slow': // somncic!!!!
+				var sky:BGSprite = new BGSprite('PolishedP1/BGSky', -600, -200, 1, 1);
+				sky.setGraphicSize(Std.int(sky.width * 1.4));
+				add(sky);
 
-			var OuterBushUp:BGSprite = new BGSprite('PolishedP1/OuterBushUp', -345, -289 + 170, 0.9, 0.9);
-			OuterBushUp.setGraphicSize(Std.int(OuterBushUp.width * 2));
-			OuterBushUp.scrollFactor.set(1, 1);
-			add(OuterBushUp);
+				var midTrees1:BGSprite = new BGSprite('PolishedP1/TreesMidBack', -600, -200, 0.7, 0.7);
+				midTrees1.setGraphicSize(Std.int(midTrees1.width * 1.4));
+				add(midTrees1);
 
-			var TreeFG:BGSprite = new BGSprite('PolishedP1/TreesFG', -645 - 100, -875 + 155, 0.7, 0.7);
-			TreeFG.setGraphicSize(Std.int(TreeFG.width * 1.35));
-			TreeFG.updateHitbox();
-			add(TreeFG);
+				var treesmid:BGSprite = new BGSprite('PolishedP1/TreesMid', -600, -200,  0.7, 0.7);
+				midTrees1.setGraphicSize(Std.int(midTrees1.width * 1.4));
+				add(treesmid);
 
+				var treesoutermid:BGSprite = new BGSprite('PolishedP1/TreesOuterMid1', -600, -200, 0.7, 0.7);
+				treesoutermid.setGraphicSize(Std.int(treesoutermid.width * 1.4));
+				add(treesoutermid);
 
-			var TreesOuterMid2:BGSprite = new BGSprite('PolishedP1/TreesOuterMid2', -495 - 100, -675 + 155, 0.8, 0.8);
-			TreesOuterMid2.setGraphicSize(Std.int(TreesOuterMid2.width * 1.35));
-			TreesOuterMid2.updateHitbox();
-			add(TreesOuterMid2);
+				var treesoutermid2:BGSprite = new BGSprite('PolishedP1/TreesOuterMid2', -600, -200,  0.7, 0.7);
+				treesoutermid2.setGraphicSize(Std.int(treesoutermid2.width * 1.4));
+				add(treesoutermid2);
 
+				var lefttrees:BGSprite = new BGSprite('PolishedP1/TreesLeft', -600, -200,  0.7, 0.7);
+				lefttrees.setGraphicSize(Std.int(lefttrees.width * 1.4));
+				add(lefttrees);
 
-			var TreesOuterMid1:BGSprite = new BGSprite('PolishedP1/TreesOuterMid1', -555 - 100, -675 + 155, 0.8, 0.8);
-			TreesOuterMid1.setGraphicSize(Std.int(TreesOuterMid1.width * 1.35));
-			TreesOuterMid1.updateHitbox();
-			add(TreesOuterMid1);
+				var righttrees:BGSprite = new BGSprite('PolishedP1/TreesRight', -600, -200, 0.7, 0.7);
+				righttrees.setGraphicSize(Std.int(righttrees.width * 1.4));
+				add(righttrees);
 
+				var outerbush:BGSprite = new BGSprite('PolishedP1/OuterBush', -600, -150, 1, 1);
+				outerbush.setGraphicSize(Std.int(outerbush.width * 1.4));
+				add(outerbush);
 
+				var outerbush2:BGSprite = new BGSprite('PolishedP1/OuterBushUp', -600, -200, 1, 1);
+				outerbush2.setGraphicSize(Std.int(outerbush2.width * 1.4));
+				add(outerbush2);
 
-			var TreesMidBack:BGSprite = new BGSprite('PolishedP1/TreesMidBack', -655 - 100, -675 + 155, 0.8, 0.8);
-			TreesMidBack.setGraphicSize(Std.int(TreesMidBack.width * 1.35));
-			TreesMidBack.updateHitbox();
-			add(TreesMidBack);
+				var grass:BGSprite = new BGSprite('PolishedP1/Grass', -600, -150, 1, 1);
+				grass.setGraphicSize(Std.int(grass.width * 1.4));
+				add(grass);
 
+				var deadegg:BGSprite = new BGSprite('PolishedP1/DeadEgg', -600, -200, 1, 1);
+				deadegg.setGraphicSize(Std.int(deadegg.width * 1.4));
+				add(deadegg);
 
-			var TreesMid:BGSprite = new BGSprite('PolishedP1/TreesMid', -695 - 100, -675 + 155, 0.8, 0.8);
-			TreesMid.setGraphicSize(Std.int(TreesMid.width * 1.35));
-			TreesMid.updateHitbox();
-			add(TreesMid);
+				var deadknux:BGSprite = new BGSprite('PolishedP1/DeadKnux', -600, -200, 1, 1);
+				deadknux.setGraphicSize(Std.int(deadknux.width * 1.4));
+				add(deadknux);
 
+				var deadtailz:BGSprite = new BGSprite('PolishedP1/DeadTailz', -700, -200, 1, 1);
+				deadtailz.setGraphicSize(Std.int(deadtailz.width * 1.4));
+				add(deadtailz);
 
+				var deadtailz1:BGSprite = new BGSprite('PolishedP1/DeadTailz1', -600, -200, 1, 1);
+				deadtailz1.setGraphicSize(Std.int(deadtailz1.width * 1.4));
+				add(deadtailz1);
 
-			var Bush1:BGSprite = new BGSprite('PolishedP1/OuterBush', -845, -525 + 230, 1, 1);
-			Bush1.setGraphicSize(Std.int(Bush1.width * 1.55));
-			Bush1.updateHitbox();
-			add(Bush1);
+				var deadtailz2:BGSprite = new BGSprite('PolishedP1/DeadTailz2', -600, -400, 1, 1);
+				deadtailz2.setGraphicSize(Std.int(deadtailz2.width * 1.4));
+				add(deadtailz2);
 
-			var Grass:BGSprite = new BGSprite('PolishedP1/Grass', -845, -425 + 205, 1, 1);
-			Grass.setGraphicSize(Std.int(Grass.width * 1.55));
-			Grass.updateHitbox();
-			add(Grass);
+				fgTrees = new BGSprite('PolishedP1/TreesFG', -610, -200, 1.1, 1.1);
+				fgTrees.setGraphicSize(Std.int(fgTrees.width * 1.45));
 
 			case 'endless-forest': // lmao
 				PlayState.SONG.splashSkin = 'noteSplashes';
@@ -1434,6 +1445,10 @@ class PlayState extends MusicBeatState
 
 		switch(curStage)
 		{
+			case 'too-slow':
+				dad.x -= 120;
+				dad.y -= 40;
+				add(fgTrees);
 			case 'limo':
 				resetFastCar();
 				addBehindGF(fastCar);
@@ -4000,6 +4015,8 @@ class PlayState extends MusicBeatState
 						iconP1.x -= 250;
 						iconP2.x -= 250;
 						healthBarBG.x -= 250;
+
+
 				}
 				case 'RedVG':
 					// ty maliciousbunny, i stole this from you but eh you wrote it in v2 so its fiiiiiiiiiiiine

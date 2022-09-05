@@ -249,13 +249,15 @@ class MainMenuState extends MusicBeatState
 										MusicBeatState.switchState(new FreeplayState());								
 									case 'soundtest':
 										LoadingState.loadAndSwitchState(new SoundTestMenu());
-									
+									case 'encore':
+										LoadingState.loadAndSwitchState(new EncoreState());
 	
 
 									case 'credits':
 										MusicBeatState.switchState(new CreditsState());
 									case 'options':
 										LoadingState.loadAndSwitchState(new options.OptionsState());
+										
 								}
 							});
 						}
