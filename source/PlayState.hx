@@ -3180,51 +3180,49 @@ class PlayState extends MusicBeatState
 	}
 
 	public var skipArrowStartTween:Bool = false; //for lua
+
+	
 	private function generateStaticArrows(player:Int):Void
-	{
-		for (i in 0...4)
 		{
-			// FlxG.log.add(i);
-			var targetAlpha:Float = 1;
-			if (player < 1)
+			var keyCount:Int = 4;
+			for (i in 0...keyCount)
 			{
-				if(!ClientPrefs.opponentStrums) targetAlpha = 0;
-				else if(ClientPrefs.middleScroll) targetAlpha = 0.35;
-			}
+				// FlxG.log.add(i);
+				var skin:String = "NOTE_assets";
+				// Skins ggg
+				if (SONG.player2 == "fatal-sonic" && player == 0)
+					skin = 'fatal';
+				if (SONG.player1 == "bf-fatal" && player == 1)
+					skin = 'week6';
+				if (isPixelStage = true)
+					skin = 'week6';
+	
+				if(SONG.song.toLowerCase()=='endless' && curStep>=900)skin='Majin_Notes';
+	
+				var babyArrow:StrumNote = new StrumNote(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
+				babyArrow.downScroll = ClientPrefs.downScroll;
 
-			var babyArrow:StrumNote = new StrumNote(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
-			babyArrow.downScroll = ClientPrefs.downScroll;
-			if (!isStoryMode && !skipArrowStartTween)
-			{
-				//babyArrow.y -= 10;
-				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {/*y: babyArrow.y + 10,*/ alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
-			else
-			{
-				babyArrow.alpha = targetAlpha;
-			}
+				var placement = (FlxG.width / 4);
+				babyArrow.x = (FlxG.width / 2) - (placement * (player == 0 ? 1 : -1));
+	
+				var fakeKeyCount:Int = keyCount;
+				var fakeNotePos:Int = i;
 
-			if (player == 1)
-			{
-				playerStrums.add(babyArrow);
+				babyArrow.x -= ((fakeKeyCount / 2) * Note.swagWidth);
+				babyArrow.x += (Note.swagWidth * fakeNotePos);
+	
+				if (player == 1)
+					playerStrums.add(babyArrow);
+				else
+					opponentStrums.add(babyArrow);
+	
+				strumLineNotes.add(babyArrow);
+				babyArrow.playAnim('static');
+				babyArrow.ID = i;
 			}
-			else
-			{
-				if(ClientPrefs.middleScroll)
-				{
-					babyArrow.x += 310;
-					if(i > 1) { //Up and Right
-						babyArrow.x += FlxG.width / 2 + 25;
-					}
-				}
-				opponentStrums.add(babyArrow);
-			}
-
-			strumLineNotes.add(babyArrow);
-			babyArrow.postAddedToGroup();
 		}
-	}
+
+	
 
 
 	function removeStatics()
@@ -3987,6 +3985,8 @@ class PlayState extends MusicBeatState
 						pickle2.visible = true;
 						genesis.visible = false;
 
+						// filters.push(ShadersHandler.scanline);
+
 						isPixelStage = true;
 
 						reloadHealthBarColors();
@@ -3995,6 +3995,11 @@ class PlayState extends MusicBeatState
 						iconP1.x += 150;
 						iconP2.x += 150;
 						healthBarBG.x += 150;
+
+						removeStatics();
+						generateStaticArrows(0);
+						generateStaticArrows(1);
+						
 
 					case 2:
 
@@ -4006,10 +4011,14 @@ class PlayState extends MusicBeatState
 						//	chromOn = false;
 						pickle.visible = false;
 						pickle2.visible = false;
-						//	filters.remove(ShadersHandler.scanline);
+						// filters.remove(ShadersHandler.scanline);
 						genesis.visible = true;
 
 						reloadHealthBarColors();
+
+						removeStatics();
+						generateStaticArrows(0);
+						generateStaticArrows(1);
 
 						healthBar.x -= 250;
 						iconP1.x -= 250;

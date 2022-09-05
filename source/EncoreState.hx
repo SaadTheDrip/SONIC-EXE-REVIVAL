@@ -1,3 +1,13 @@
+
+/* 
+
+ENTIRELY COPY PASTED FROM MARIO MADNESS 
+
+CREDIT TO THOSE BITCHES
+
+
+*/
+
 package;
 
 #if desktop
@@ -62,7 +72,6 @@ class EncoreState extends MusicBeatState
 	var descText:FlxText;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
-	var estatica:FlxSprite;
 
 	override function create()
 	{
@@ -84,15 +93,7 @@ class EncoreState extends MusicBeatState
 		bg.screenCenter(XY);
 		add(bg);
 
-		estatica = new FlxSprite();
-		estatica.frames = Paths.getSparrowAtlas('modstuff/estatica_uwu');
-		estatica.animation.addByPrefix('idle', "Estatica papu", 15);
-		estatica.animation.play('idle');
-		estatica.antialiasing = false;
-		estatica.alpha = 0.3;
-		estatica.scrollFactor.set();
-		estatica.updateHitbox();
-		add(estatica);
+
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
@@ -109,6 +110,7 @@ class EncoreState extends MusicBeatState
 				{
 	
 					var char:FlxSprite = new FlxSprite(1000 * fuck , 100).loadGraphic(Paths.image('encorestuff/Char' + canciones[i][2]));
+
 
 					boxgrp.add(char);
 
@@ -162,7 +164,6 @@ class EncoreState extends MusicBeatState
 				caminar();
 				obo = true;
 			}
-		estatica.animation.play('idle');
 
 		if (FlxG.sound.music.volume < 0.7)
 		{
