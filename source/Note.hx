@@ -54,6 +54,7 @@ class Note extends FlxSprite
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
 	public var staticnote:Bool = false;
+
 	public var earlyHitMult:Float = 0.5;
 	public var lateHitMult:Float = 1;
 	public var lowPriority:Bool = false;
@@ -168,6 +169,11 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
+
+					lowPriority = true;
+				case 'Pixel Note':
+					reloadNote('PIXEL');
+
 			}
 			noteType = value;
 		}
@@ -294,7 +300,7 @@ class Note extends FlxSprite
 	var lastNoteOffsetXForPixelAutoAdjusting:Float = 0;
 	var lastNoteScaleToo:Float = 1;
 	public var originalHeightForCalcs:Float = 6;
-	function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = '') {
+	public function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = '') {
 		if(prefix == null) prefix = '';
 		if(texture == null) texture = '';
 		if(suffix == null) suffix = '';

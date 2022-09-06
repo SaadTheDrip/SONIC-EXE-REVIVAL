@@ -92,6 +92,7 @@ import sys.io.File;
 
 #if VIDEOS_ALLOWED
 import vlc.MP4Handler;
+import vlc.MP4Sprite;
 #end
 
 using StringTools;
@@ -273,6 +274,10 @@ class PlayState extends MusicBeatState
 	var fgTrees:BGSprite;
 	var genesis:FlxTypedGroup<FlxSprite>;
 
+	// - dad 2 things (namely needlemouse)
+	public var dad2:Character;
+	public var dad2Group:FlxSpriteGroup; // going to use this for needle/sarah (avery)
+
 	// because i need it
 	var FreddyFastBearFloor:BGSprite;
 
@@ -290,11 +295,21 @@ class PlayState extends MusicBeatState
 	var warning:FlxSprite;
 	var dodgething:FlxSprite;
 
-
+	// Preload vars so no null obj ref
+	var daNoteStatic:FlxSprite;
+	var preloaded:Bool = false;
 
 	//majin sonic funny haha
 	var fgmajin:BGSprite;
 	var fgmajin2:BGSprite;
+
+	// needlemouse shit
+	var conkCreet:BGSprite;
+	var needleBuildings:BGSprite;
+	var needleMoutains:BGSprite;
+	var needleSky:BGSprite;
+	var needleRuins:BGSprite;
+	var needleFg:FlxSprite;
 
 	//variables for stuff (strumline spins, zoom bools, etc...) shit
 	public static var isFixedAspectRatio:Bool = false;
@@ -324,6 +339,7 @@ class PlayState extends MusicBeatState
 	var sunker:FlxSprite;
 	var spoOoOoOky:FlxSprite;
 
+
 	// - flying shit
 	var flyTarg:Character;
 	var flyState:String = '';
@@ -351,6 +367,13 @@ class PlayState extends MusicBeatState
 	public var scoreTxt:FlxText;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
+
+	var healthDrop:Float = 0;
+	var dropTime:Float = 0;
+
+	// - healthbar flip shit
+	public var healthbarval:Float = 1; // I'm fucking stupid but ok it works
+	var bfIsLeft:Bool = false;
 
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
@@ -576,6 +599,8 @@ class PlayState extends MusicBeatState
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
+		dad2Group = new FlxSpriteGroup(DAD_X, DAD_Y); // should load right on top of dad? hopefully lmao (avery)
+
 
 		switch (curStage)
 		{
@@ -643,6 +668,7 @@ class PlayState extends MusicBeatState
 
 				fgTrees = new BGSprite('PolishedP1/TreesFG', -610, -200, 1.1, 1.1);
 				fgTrees.setGraphicSize(Std.int(fgTrees.width * 1.45));
+
 
 			case 'endless-forest': // lmao
 				PlayState.SONG.splashSkin = 'noteSplashes';
@@ -750,6 +776,47 @@ class PlayState extends MusicBeatState
 				var bg:BGSprite = new BGSprite('sanicbg', -370, -130, 1.0, 1.0);
 				bg.setGraphicSize(Std.int(bg.width * 1.2));
 				add(bg);
+
+			case 'needle':
+				/**
+								READ HOODRATS YOU MONGALOIDS
+				https://www.webtoons.com/en/challenge/hoodrats/list?title_no=694588
+				https://www.webtoons.com/en/challenge/hoodrats/list?title_no=694588
+				https://www.webtoons.com/en/challenge/hoodrats/list?title_no=694588
+				https://www.webtoons.com/en/challenge/hoodrats/list?title_no=694588
+				https://www.webtoons.com/en/challenge/hoodrats/list?title_no=694588
+								READ IT, NOW!! !! !! !! !!
+				**/
+
+				defaultCamZoom = 0.6;
+
+				GameOverSubstate.characterName = 'bf-needle-die';
+				GameOverSubstate.loopSoundName = 'needlemouse-loop';
+				GameOverSubstate.endSoundName = 'needlemouse-retry';
+
+				needleSky = new BGSprite('needlemouse/sky', -725, -200, 0.7, 0.9);
+				// needleSky.setGraphicSize(Std.int(needleSky.width * 0.9));
+				add(needleSky);
+
+				needleMoutains = new BGSprite('needlemouse/mountains', -700, -175, 0.8, 0.9);
+				needleMoutains.setGraphicSize(Std.int(needleMoutains.width * 1.1));
+				add(needleMoutains);
+
+				needleRuins = new BGSprite('needlemouse/ruins', -775, -310, 1, 0.9);
+				needleRuins.setGraphicSize(Std.int(needleRuins.width * 1.4));
+				add(needleRuins);
+
+				needleBuildings = new BGSprite('needlemouse/buildings', -1000, -100, 1, 0.9);
+				// needleBuildings.setGraphicSize(Std.int(needleBuildings.width * 0.85));
+				add(needleBuildings);
+
+				conkCreet = new BGSprite('needlemouse/CONK_CREET', -775, -310, 1, 0.9);
+				conkCreet.setGraphicSize(Std.int(conkCreet.width * 1.4));
+				add(conkCreet);
+
+				needleFg = new FlxSprite(-690, -80).loadGraphic(Paths.image("needlemouse/fg"));
+				needleFg.setGraphicSize(Std.int(needleFg.width * 1.1));
+				needleFg.scrollFactor.set(1, 0.9);
 
 
 
@@ -1281,14 +1348,18 @@ class PlayState extends MusicBeatState
 			introSoundsSuffix = '-pixel';
 		}
 
-		add(gfGroup); //Needed for blammed lights
-
-		// Shitty layering but whatev it works LOL
-		if (curStage == 'limo')
-			add(limo);
-
-		add(dadGroup);
-		add(boyfriendGroup);
+		switch (curStage)
+		{
+			case 'needle':
+				add(gfGroup);
+				add(dad2Group);
+				add(dadGroup);
+				add(boyfriendGroup);
+			default:
+				add(gfGroup);
+				add(dadGroup);
+				add(boyfriendGroup);
+		}
 
 		switch(curStage)
 		{
@@ -1397,6 +1468,13 @@ class PlayState extends MusicBeatState
 			gf.scrollFactor.set(0.95, 0.95);
 			gfGroup.add(gf);
 			startCharacterLua(gf.curCharacter);
+
+			if (curStage == 'needle')
+				{
+					dad2 = new Character(0, 0, 'sarah');
+					startCharacterPos(dad2, true);
+					dad2Group.add(dad2);
+				}
 
 			if(gfVersion == 'pico-speaker')
 			{
@@ -2121,6 +2199,27 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
+	function chromaVideo(name:String){
+		var video = new MP4Sprite(0,0);
+		video.scrollFactor.set();
+		video.cameras = [camHUD];
+		video.shader = new GreenScreenShader();
+		video.visible=false;
+		video.finishCallback = function(){
+			trace("video gone");
+			remove(video);
+			video.destroy();
+		}
+		video.playVideo(Paths.video(name));
+		video.readyCallback = function(){
+			video.visible=true;
+		}
+		add(video);
+	}
+
+	
+
+
 	function startAndEnd()
 	{
 		if(endingSong)
@@ -2732,6 +2831,7 @@ class PlayState extends MusicBeatState
 				notes.forEachAlive(function(note:Note) {
 					if(ClientPrefs.opponentStrums || note.mustPress)
 					{
+						
 						note.copyAlpha = false;
 						note.alpha = note.multAlpha;
 						if(ClientPrefs.middleScroll && !note.mustPress) {
@@ -2989,6 +3089,15 @@ class PlayState extends MusicBeatState
 				swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
 				swagNote.noteType = songNotes[3];
 				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = editors.ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
+					// OPPONENT/BF SEPARATE SKINS
+					if (SONG.player2 == "fatal-sonic" && !gottaHitNote)
+						swagNote.texture = "fatal";
+					if (SONG.player1 == "bf-fatal" && gottaHitNote)
+						swagNote.texture = "week6";
+					
+
+					if (SONG.player1 == "bfpickel" && gottaHitNote)
+						swagNote.texture = "week6";
 
 				swagNote.scrollFactor.set();
 
@@ -3090,6 +3199,7 @@ class PlayState extends MusicBeatState
 
 				var newCharacter:String = event.value2;
 				addCharacterToList(newCharacter, charType);
+
 
 			case 'Dadbattle Spotlight':
 				dadbattleBlack = new BGSprite(null, -800, -400, 0, 0);
@@ -3390,7 +3500,6 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
-
 
 
 		switch (curStage)
@@ -3988,6 +4097,7 @@ class PlayState extends MusicBeatState
 
 						isPixelStage = true;
 
+
 						reloadHealthBarColors();
 
 						healthBar.x += 150;
@@ -4032,7 +4142,9 @@ class PlayState extends MusicBeatState
 					vg.alpha = 0;
 					vg.cameras = [camHUD];
 					add(vg);
-	
+
+
+
 					// now that we can pause it, why not just yknow
 	
 					FlxTween.tween(vg, {alpha: 1}, 0.85, {type: FlxTweenType.PINGPONG});
@@ -4055,7 +4167,32 @@ class PlayState extends MusicBeatState
 								FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.7, {ease: FlxEase.cubeInOut});
 								majinSaysFuck(1);
 						}
-				
+			case 'strum swap1':
+				playerStrums.forEach(function(spr:FlxSprite)
+				{
+					spr.x -= 645;
+				});
+				opponentStrums.forEach(function(spr:FlxSprite)
+				{
+					spr.x += 645;
+				});
+				bfIsLeft = true;
+				iconP1.changeIcon(dad.healthIcon);
+				iconP2.changeIcon(boyfriend.healthIcon);
+				reloadHealthBarColors();
+			case 'strum swap2':
+				playerStrums.forEach(function(spr:FlxSprite)
+				{
+					spr.x += 645;
+				});
+				opponentStrums.forEach(function(spr:FlxSprite)
+				{
+					spr.x -= 645;
+				});
+				bfIsLeft = false;
+				iconP2.changeIcon(dad.healthIcon);
+				iconP1.changeIcon(boyfriend.healthIcon);
+				reloadHealthBarColors();				
 
 			case 'Hey!':
 				var value:Int = 2;
@@ -5116,6 +5253,14 @@ class PlayState extends MusicBeatState
 		if(daNote.staticnote) {
 
 			FlxG.sound.play(Paths.sound('hitstatic1'));
+			FlxG.camera.shake(0.005, 0.005);
+
+			daNoteStatic = new FlxSprite(0, 0).loadGraphic(Paths.image("hitStatic", 'exe'));
+			daNoteStatic.frames = Paths.getSparrowAtlas('hitStatic');
+			daNoteStatic.animation.addByPrefix('static', "staticANIMATION", 24, false);
+			daNoteStatic.animation.play('static');
+			daNoteStatic.cameras = [camHUD];
+			add(daNoteStatic);
 		}
 
 		if(char != null && !daNote.noMissAnimation && char.hasMissAnimations)
@@ -5250,6 +5395,11 @@ class PlayState extends MusicBeatState
 								boyfriend.playAnim('hurt', true);
 								boyfriend.specialAnim = true;
 							}
+						case 'Phantom Note':
+							trace("xdeez nuts lmao");
+								healthDrop += 0.00025;
+								dropTime = 10;
+						case 'Pixel Note':
 					}
 				}
 
@@ -5282,6 +5432,15 @@ class PlayState extends MusicBeatState
 						gf.holdTimer = 0;
 					}
 				}
+				if (curStage == 'needle')
+					{
+						dad2.playAnim(animToPlay + note.animSuffix, true);
+						dad.playAnim(animToPlay + note.animSuffix, true);
+
+						
+						dad.holdTimer = 0;
+						dad2.holdTimer = 0;
+					}
 				else
 				{
 					boyfriend.playAnim(animToPlay + note.animSuffix, true);
@@ -5669,7 +5828,17 @@ class PlayState extends MusicBeatState
 					generateStaticArrows(0);
 					generateStaticArrows(1);
 					FlxTween.tween(camHUD, {alpha: 1}, 0.5);
+
 			}
+			if (SONG.song.toLowerCase() == 'too-fest')
+				{
+					switch (curStep)
+						{
+
+								
+
+						}
+				}
 		}
 
 

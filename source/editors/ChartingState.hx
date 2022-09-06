@@ -67,7 +67,7 @@ class ChartingState extends MusicBeatState
 		'GF Sing',
 		'Static Note',
 		'No Animation',
-		'Phantom Note'
+
 
 	];
 	private var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
@@ -95,6 +95,10 @@ class ChartingState extends MusicBeatState
 		['Set Property', "Value 1: Variable name\nValue 2: New value"],
 		['Genesis', "Value 1: 1 = true or 2 = false (only works in ycr stage)"],
 		['RedVG', "it just does something"],
+		['strum swap1', "strum shit"],
+		['strum swap2', "strum shit"],
+		['RedVG', "it just does something"],
+		['Chroma Video', "FUNNY MEME SHIT VIDEO AHAHAH FUNNY"],
 		['Majin count', "3 2 1 go fuck yourself"]
 	];
 
