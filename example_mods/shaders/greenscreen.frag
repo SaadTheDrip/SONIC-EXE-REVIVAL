@@ -1,16 +1,74 @@
-#define threshold 0.55
-#define padding 0.05
+//SHADERTOY PORT FIX
+#pragma header
+vec2 uv = openfl_TextureCoordv.xy;
+vec2 fragCoord = openfl_TextureCoordv*openfl_TextureSize;
+vec2 iResolution = openfl_TextureSize;
+uniform float iTime;
+#define iChannel0 bitmap
+#define texture flixel_texture2D
+#define fragColor gl_FragColor
+#define mainImage main
+//SHADERTOY PORT FIX
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-	vec2 uv = fragCoord.xy / iResolution.xy;
+
+#define PI 3.1415926535
+
+// chromakey from here https://www.shadertoy.com/view/MsS3DW
+// this buffer just makes alpha mask
+
+float th = 8.0; // threshold
+float a2 = 1.2;
+float spill = 1.0;
+
+
+float getAlpha(vec4 c){
+	// First Vlahos assumption: Gf <= a2Bf	
+	return 1.0 - th*(c.g-a2*(max(c.r,c.b)));
+	}
+
+vec4 despill(vec4 c){
+	/// Second Vlahos assumption: max (Gf - Bf,0) <= max(Bf - Rf, 0)
+	float sub = max(c.g - mix(c.b, c.r, 0.45), 0.0);
+	c.g -= sub;
+	
+	/// 
+	c.a -= smoothstep(0.25, 0.5, sub*c.a);
+	
+	//restore luminance (kind of, I slightly reduced the green weight)
+	float luma = dot(c.rgb, vec3(0.350, 0.587,0.164));
+	c.r += sub*c.r*2.0*.350/luma;
+	c.g += sub*c.g*2.0*.587/luma;
+	c.b += sub*c.b*2.0*.164/luma;
+      c.a += sub*c.g*2.0*.587/luma;
+
+
+	return c;
+	}
+
+
+void mainImage() {
+
+        vec2 uv = fragCoord / iResolution.xy;
+    float circle = 1.0;
     
-    vec4 greenScreen = vec4(0.,1.,0.,1.);
-    vec4 color = texture(iChannel0, uv);
+    vec3 target = vec3(0, 1, 0.0); // Find green
+    vec3 background = vec3(0.0, 0.0, 0.0);
+    highp vec3 color;
     
-    vec3 diff = color.xyz - greenScreen.xyz;
-    float fac = smoothstep(threshold-padding,threshold+padding, dot(diff,diff));
+
+    float threshold = 0.5; // Controls target color range
+    float softness = 1; // Controls linear falloff
     
-    color = mix(color, texture(iChannel1, uv), 1.-fac);
-	fragColor = color;
+    // Background color key
+    vec4 col = texture(iChannel0, uv);
+    float diff = distance(col.xyz, target.xyz) - threshold;
+    float factor = clamp(diff / softness, 0.0, 1.0);
+
+    
+
+    fragColor = vec4(mix(background, col.xyz, factor), 0.1);
+    
+    
+    
+    
 }

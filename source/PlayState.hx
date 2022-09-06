@@ -5853,7 +5853,8 @@ class PlayState extends MusicBeatState
 					switch (curStep)
 					{
 						case 765:
-							FlxTween.tween(dad2, {alpha: 1}, 0.3, {ease: FlxEase.quadInOut});
+							dad2.alpha = 1;
+						trace(':SARAT:');
 						// funnyLargeTween();
 		
 						case 770:
@@ -5870,7 +5871,6 @@ class PlayState extends MusicBeatState
 								}
 								dad2.alpha += oki;
 		
-								ok.reset();
 							});
 					}
 				}
