@@ -1527,6 +1527,14 @@ class PlayState extends MusicBeatState
 				dad.x -= 120;
 				dad.y -= 40;
 				add(fgTrees);
+			case 'needle':
+				add(needleFg);
+				dad2.alpha = 0;
+
+				flyTarg = dad2; // fucking smart genious and intellegent
+				flyState = 'sHover';
+
+				boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.9));
 			case 'limo':
 				resetFastCar();
 				addBehindGF(fastCar);
@@ -3502,6 +3510,19 @@ class PlayState extends MusicBeatState
 		callOnLuas('onUpdate', [elapsed]);
 
 
+		switch (flyState)
+		{
+			case 'hover' | 'hovering':
+				flyTarg.y += Math.sin(floaty) * 1.5;
+			// moveCameraSection(Std.int(curStep / 16));
+			case 'fly' | 'flying':
+				flyTarg.y += Math.sin(floaty) * 1.5;
+				flyTarg.x += Math.cos(floaty) * 1.5;
+				// moveCameraSection(Std.int(curStep / 16));
+			case 'sHover' | 'sHovering':
+				flyTarg.y += Math.sin(floaty2) * 0.5;
+		}
+
 		switch (curStage)
 		{
 			case 'tank':
@@ -5342,7 +5363,13 @@ class PlayState extends MusicBeatState
 			if(note.gfNote) {
 				char = gf;
 			}
+			if (curStage == 'needle')
+				{
+					dad2.playAnim(animToPlay + note.animSuffix, true);
 
+					
+					dad2.holdTimer = 0;
+				}
 			if(char != null)
 			{
 				char.playAnim(animToPlay, true);
@@ -5432,15 +5459,6 @@ class PlayState extends MusicBeatState
 						gf.holdTimer = 0;
 					}
 				}
-				if (curStage == 'needle')
-					{
-						dad2.playAnim(animToPlay + note.animSuffix, true);
-						dad.playAnim(animToPlay + note.animSuffix, true);
-
-						
-						dad.holdTimer = 0;
-						dad2.holdTimer = 0;
-					}
 				else
 				{
 					boyfriend.playAnim(animToPlay + note.animSuffix, true);
@@ -5830,6 +5848,32 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(camHUD, {alpha: 1}, 0.5);
 
 			}
+			if (curStage == 'needle' && SONG.song.toLowerCase() == 'round-a-bout')
+				{
+					switch (curStep)
+					{
+						case 765:
+							FlxTween.tween(dad2, {alpha: 1}, 0.3, {ease: FlxEase.quadInOut});
+						// funnyLargeTween();
+		
+						case 770:
+							var oki:Float = -0.1;
+							new FlxTimer().start(0.1, function(ok:FlxTimer)
+							{
+								if (dad2.alpha <= 0.5)
+								{
+									oki = 0.01;
+								}
+								if (dad2.alpha >= 1)
+								{
+									oki = -0.01;
+								}
+								dad2.alpha += oki;
+		
+								ok.reset();
+							});
+					}
+				}
 			if (SONG.song.toLowerCase() == 'too-fest')
 				{
 					switch (curStep)
