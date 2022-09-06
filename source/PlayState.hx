@@ -1529,7 +1529,7 @@ class PlayState extends MusicBeatState
 				add(fgTrees);
 			case 'needle':
 				add(needleFg);
-				dad2.alpha = 0;
+				dad2.visible = false;
 
 				flyTarg = dad2; // fucking smart genious and intellegent
 				flyState = 'sHover';
@@ -5845,35 +5845,22 @@ class PlayState extends MusicBeatState
 					removeStatics();
 					generateStaticArrows(0);
 					generateStaticArrows(1);
-					FlxTween.tween(camHUD, {alpha: 1}, 0.5);
-
+					FlxTween.tween(camHUD, {alpha: 1}, 0.5);		
 			}
-			if (curStage == 'needle' && SONG.song.toLowerCase() == 'round-a-bout')
+		}
+		
+		if (curSong == 'round-a-bout')
+			{
+				switch (curStep)
 				{
-					switch (curStep)
-					{
-						case 765:
-							dad2.alpha = 1;
+					case 765:
+						dad2.visible = true;
 						trace(':SARAT:');
-						// funnyLargeTween();
+					// funnyLargeTween();
 		
-						case 770:
-							var oki:Float = -0.1;
-							new FlxTimer().start(0.1, function(ok:FlxTimer)
-							{
-								if (dad2.alpha <= 0.5)
-								{
-									oki = 0.01;
-								}
-								if (dad2.alpha >= 1)
-								{
-									oki = -0.01;
-								}
-								dad2.alpha += oki;
-		
-							});
-					}
+
 				}
+			}		
 			if (SONG.song.toLowerCase() == 'too-fest')
 				{
 					switch (curStep)
@@ -5883,7 +5870,7 @@ class PlayState extends MusicBeatState
 
 						}
 				}
-		}
+		
 
 
 		if(curStep == lastStepHit) {
