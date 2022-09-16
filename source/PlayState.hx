@@ -1341,6 +1341,8 @@ class PlayState extends MusicBeatState
 			FlxG.scaleMode = new StageSizeScaleMode();
 			FlxG.resizeGame(960, 720);
 			FlxG.resizeWindow(960, 720);
+
+
 		}
 
 
@@ -4170,7 +4172,14 @@ class PlayState extends MusicBeatState
 	
 						}
 
+						aspectRatio = true;
+						isFixedAspectRatio = true;
+
+
+
+						camOther.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
 						camHUD.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
+
 			
 						Lib.application.window.resizable = false;
 						FlxG.scaleMode = new StageSizeScaleMode();
@@ -4214,9 +4223,14 @@ class PlayState extends MusicBeatState
 								i.reloadNote();
 			
 							}
+								
 
+							aspectRatio = false;
+							isFixedAspectRatio = false;
 
+							camOther.x += 40; // Best fix ever 2022 (it's just for centering the camera lawl)
 							camHUD.x += 40; // Best fix ever 2022 (it's just for centering the camera lawl)
+	
 
 							Lib.application.window.resizable = true;
 							FlxG.scaleMode = new RatioScaleMode(false);
