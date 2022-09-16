@@ -4147,6 +4147,15 @@ class PlayState extends MusicBeatState
 						isPixelStage = true;
 
 
+						playerStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x -= 82;
+							});
+						opponentStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x += 82;
+							});
+
 						reloadHealthBarColors();
 
 						healthBar.x += 150;
@@ -4158,38 +4167,44 @@ class PlayState extends MusicBeatState
 						generateStaticArrows(0);
 						generateStaticArrows(1);
 						for (i in notes)
-						{
-
-							i.reloadNote();	
-
-
-						}
-						for (i in unspawnNotes)
-						{
-	
-							i.reloadNote();	
-
-	
-						}
-
-						aspectRatio = true;
-						isFixedAspectRatio = true;
+							{
+								i.reloadNote();	
+							}
+						for (i in unspawnnotes)
+							{
+								i.reloadNote();	
+							}
 
 
+							for (i in strumLineNotes)
+								{
+				
+									i.reloadNote();
+				
+								}
 
-						camOther.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
-						camHUD.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
-
-			
-						Lib.application.window.resizable = false;
-						FlxG.scaleMode = new StageSizeScaleMode();
-						FlxG.resizeGame(960, 720);
-						FlxG.resizeWindow(960, 720);
+							camHUD.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
+				
+							Lib.application.window.resizable = false;
+							FlxG.scaleMode = new StageSizeScaleMode();
+							FlxG.resizeGame(960, 720);
+							FlxG.resizeWindow(960, 720);
 						
 
 					case 2:
 
 						gfGroup.visible = true;
+
+
+						playerStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x += 82;
+							});
+						opponentStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x -= 82;
+							});
+
 
 						defaultCamZoom = 0.65;
 						isPixelStage = false;
@@ -4205,40 +4220,26 @@ class PlayState extends MusicBeatState
 						removeStatics();
 						generateStaticArrows(0);
 						generateStaticArrows(1);
-						for (i in notes)
-							{
-	
-							i.reloadNote();
-	
-							}
-						for (i in unspawnNotes)
-							{
-		
-								i.reloadNote();
-		
-							}
-						for (i in strumLineNotes)
-							{
-			
-								i.reloadNote();
-			
-							}
-								
 
-							aspectRatio = false;
-							isFixedAspectRatio = false;
-
-							camOther.x += 40; // Best fix ever 2022 (it's just for centering the camera lawl)
-							camHUD.x += 40; // Best fix ever 2022 (it's just for centering the camera lawl)
-	
-
+							camHUD.x += 80; // Best fix ever 2022 (it's just for centering the camera lawl)
 							Lib.application.window.resizable = true;
 							FlxG.scaleMode = new RatioScaleMode(false);
 							FlxG.resizeGame(1280, 720);
 							FlxG.resizeWindow(1280, 720);
 
 
-
+							for (i in notes)
+								{
+		
+								i.reloadNote();
+		
+								}
+							for (i in strumLineNotes)
+								{
+				
+									i.reloadNote();
+				
+								}
 
 
 						healthBar.x -= 250;
