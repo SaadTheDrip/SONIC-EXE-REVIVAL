@@ -216,6 +216,8 @@ class SoundTestMenu extends MusicBeatState
                     LoadingState.loadAndSwitchState(new PlayState());
                     });
                 }
+                
+                
 			else if (first == 11 && second == 24)
                 {
     

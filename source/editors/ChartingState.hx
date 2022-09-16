@@ -97,6 +97,9 @@ class ChartingState extends MusicBeatState
 		['RedVG', "it just does something"],
 		['strum swap1', "strum shit"],
 		['strum swap2', "strum shit"],
+
+		['dad2 visible', "true or false (only on round a bout)"],
+
 		['RedVG', "it just does something"],
 		['Chroma Video', "FUNNY MEME SHIT VIDEO AHAHAH FUNNY"],
 		['Majin count', "3 2 1 go fuck yourself"]

@@ -172,7 +172,6 @@ class Note extends FlxSprite
 
 					lowPriority = true;
 				case 'Pixel Note':
-					reloadNote('PIXEL');
 
 			}
 			noteType = value;

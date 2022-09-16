@@ -69,6 +69,7 @@ import editors.CharacterEditorState;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
 import Note.EventNote;
+import Note;
 import openfl.events.KeyboardEvent;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
@@ -522,6 +523,12 @@ class PlayState extends MusicBeatState
 
 		GameOverSubstate.resetVariables();
 		var songName:String = Paths.formatToSongPath(SONG.song);
+
+		daNoteStatic = new FlxSprite(0, 0).loadGraphic(Paths.image("hitStatic", 'exe'));
+		daNoteStatic.frames = Paths.getSparrowAtlas('hitStatic');
+		daNoteStatic.animation.addByPrefix('static', "staticANIMATION", 24, false);
+		trace('loaded funny static note shit because i dont want a laggy mess');
+
 
 		curStage = SONG.stage;
 		//trace('stage is: ' + curStage);
@@ -1319,7 +1326,7 @@ class PlayState extends MusicBeatState
 
 		switch (SONG.song.toLowerCase())
 		{
-			case 'b4cksl4sh' | 'fatality' | "milk":
+			case 'b4cksl4sh' | 'fatality' | "milk" :
 				isFixedAspectRatio = true;
 			default:
 				isFixedAspectRatio = false;
@@ -1335,7 +1342,8 @@ class PlayState extends MusicBeatState
 			FlxG.resizeGame(960, 720);
 			FlxG.resizeWindow(960, 720);
 		}
-		
+
+
 
 
 		switch(Paths.formatToSongPath(SONG.song))
@@ -3104,8 +3112,6 @@ class PlayState extends MusicBeatState
 						swagNote.texture = "week6";
 					
 
-					if (SONG.player1 == "bfpickel" && gottaHitNote)
-						swagNote.texture = "week6";
 
 				swagNote.scrollFactor.set();
 
@@ -3302,47 +3308,56 @@ class PlayState extends MusicBeatState
 	
 	private function generateStaticArrows(player:Int):Void
 		{
-			var keyCount:Int = 4;
-			for (i in 0...keyCount)
+			for (i in 0...4)
 			{
-				// FlxG.log.add(i);
-				var skin:String = "NOTE_assets";
-				// Skins ggg
-				if (SONG.player2 == "fatal-sonic" && player == 0)
-					skin = 'fatal';
-				if (SONG.player1 == "bf-fatal" && player == 1)
-					skin = 'week6';
 
-	
-				if(SONG.song.toLowerCase()=='endless' && curStep>=900)skin='Majin_Notes';
+
+				// FlxG.log.add(i);
+				var targetAlpha:Float = 1;
+				if (player < 1)
+				{
+					if(!ClientPrefs.opponentStrums) targetAlpha = 0;
+					else if(ClientPrefs.middleScroll) targetAlpha = 0.35;
+				}
 	
 				var babyArrow:StrumNote = new StrumNote(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
 				babyArrow.downScroll = ClientPrefs.downScroll;
-
-				var placement = (FlxG.width / 4);
-				babyArrow.x = (FlxG.width / 2) - (placement * (player == 0 ? 1 : -1));
-	
-				var fakeKeyCount:Int = keyCount;
-				var fakeNotePos:Int = i;
-
-				babyArrow.x -= ((fakeKeyCount / 2) * Note.swagWidth);
-				babyArrow.x += (Note.swagWidth * fakeNotePos);
+				if (!isStoryMode && !skipArrowStartTween)
+				{
+					//babyArrow.y -= 10;
+					babyArrow.alpha = 0;
+					FlxTween.tween(babyArrow, {/*y: babyArrow.y + 10,*/ alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				}
+				else
+				{
+					babyArrow.alpha = targetAlpha;
+				}
 	
 				if (player == 1)
+				{
 					playerStrums.add(babyArrow);
+				}
 				else
+				{
+					if(ClientPrefs.middleScroll)
+					{
+						babyArrow.x += 310;
+						if(i > 1) { //Up and Right
+							babyArrow.x += FlxG.width / 2 + 25;
+						}
+					}
 					opponentStrums.add(babyArrow);
+				}
 	
 				strumLineNotes.add(babyArrow);
-				babyArrow.playAnim('static');
-				babyArrow.ID = i;
+				babyArrow.postAddedToGroup();
+
 			}
 		}
+		
 
-	
 
-
-	function removeStatics()
+	private function removeStatics()
 		{
 			playerStrums.forEach(function(todel:StrumNote)
 			{
@@ -4099,6 +4114,17 @@ class PlayState extends MusicBeatState
 						}});
 				}
 
+			case 'dad2 visible':
+
+				switch (value1)
+				{
+					case 'true':
+					dad2.visible = true;
+
+					case 'false':
+						dad2.visible = false;
+	
+				}
 			case 'Genesis':
 				var value:Int = Std.parseInt(value1);
 				if (Math.isNaN(value))
@@ -4129,6 +4155,27 @@ class PlayState extends MusicBeatState
 						removeStatics();
 						generateStaticArrows(0);
 						generateStaticArrows(1);
+						for (i in notes)
+						{
+
+							i.reloadNote();	
+
+
+						}
+						for (i in unspawnNotes)
+						{
+	
+							i.reloadNote();	
+
+	
+						}
+
+						camHUD.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
+			
+						Lib.application.window.resizable = false;
+						FlxG.scaleMode = new StageSizeScaleMode();
+						FlxG.resizeGame(960, 720);
+						FlxG.resizeWindow(960, 720);
 						
 
 					case 2:
@@ -4149,6 +4196,36 @@ class PlayState extends MusicBeatState
 						removeStatics();
 						generateStaticArrows(0);
 						generateStaticArrows(1);
+						for (i in notes)
+							{
+	
+							i.reloadNote();
+	
+							}
+						for (i in unspawnNotes)
+							{
+		
+								i.reloadNote();
+		
+							}
+						for (i in strumLineNotes)
+							{
+			
+								i.reloadNote();
+			
+							}
+
+
+							camHUD.x += 40; // Best fix ever 2022 (it's just for centering the camera lawl)
+
+							Lib.application.window.resizable = true;
+							FlxG.scaleMode = new RatioScaleMode(false);
+							FlxG.resizeGame(1280, 720);
+							FlxG.resizeWindow(1280, 720);
+
+
+
+
 
 						healthBar.x -= 250;
 						iconP1.x -= 250;
@@ -4197,10 +4274,10 @@ class PlayState extends MusicBeatState
 				{
 					spr.x += 645;
 				});
+
+
 				bfIsLeft = true;
-				iconP1.changeIcon(dad.healthIcon);
-				iconP2.changeIcon(boyfriend.healthIcon);
-				reloadHealthBarColors();
+
 			case 'strum swap2':
 				playerStrums.forEach(function(spr:FlxSprite)
 				{
@@ -4210,10 +4287,8 @@ class PlayState extends MusicBeatState
 				{
 					spr.x -= 645;
 				});
-				bfIsLeft = false;
-				iconP2.changeIcon(dad.healthIcon);
-				iconP1.changeIcon(boyfriend.healthIcon);
-				reloadHealthBarColors();				
+			
+
 
 			case 'Hey!':
 				var value:Int = 2;
@@ -5276,9 +5351,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('hitstatic1'));
 			FlxG.camera.shake(0.005, 0.005);
 
-			daNoteStatic = new FlxSprite(0, 0).loadGraphic(Paths.image("hitStatic", 'exe'));
-			daNoteStatic.frames = Paths.getSparrowAtlas('hitStatic');
-			daNoteStatic.animation.addByPrefix('static', "staticANIMATION", 24, false);
+
 			daNoteStatic.animation.play('static');
 			daNoteStatic.cameras = [camHUD];
 			add(daNoteStatic);
@@ -5849,18 +5922,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
-		if (curSong == 'round-a-bout')
-			{
-				switch (curStep)
-				{
-					case 765:
-						dad2.visible = true;
-						trace(':SARAT:');
-					// funnyLargeTween();
-		
 
-				}
-			}		
 			if (SONG.song.toLowerCase() == 'too-fest')
 				{
 					switch (curStep)
