@@ -3529,6 +3529,9 @@ class PlayState extends MusicBeatState
 		callOnLuas('onUpdate', [elapsed]);
 
 
+		if (isFixedAspectRatio)
+			FlxG.fullscreen = false;
+
 		switch (flyState)
 		{
 			case 'hover' | 'hovering':
