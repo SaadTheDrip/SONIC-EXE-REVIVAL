@@ -293,21 +293,6 @@ class PlayState extends MusicBeatState
 
 	//sonic hud related shit
 	public var sonicHUD:FlxSpriteGroup;
-	public var scoreNumbers:Array<SonicNumber>=[];
-	public var missNumbers:Array<SonicNumber>=[];
-	public var ringsNumbers:Array<SonicNumber>=[];
-	public var minNumber:SonicNumber;
-	public var secondNumberA:SonicNumber;
-	public var secondNumberB:SonicNumber;
-	public var millisecondNumberA:SonicNumber;
-	public var millisecondNumberB:SonicNumber;
-	public var sonicHUDSongs:Array<String> = [
-		"my-horizon",
-		"our-horizon",
-		"prey",
-		"fatality",
-		"b4cksl4sh",
-	];
 
 	var hudStyle:String = 'sonic2';
 	public var sonicHUDStyles:Map<String, String> = [
@@ -323,6 +308,14 @@ class PlayState extends MusicBeatState
 		// defaults to sonic2 if its in sonicHUDSongs but not in here
 	];
 
+	public var sonicHUDSongs:Array<String> = [
+		"my-horizon",
+		"our-horizon",
+		"prey",
+		"you-cant-run", // for the pixel part in specific
+		"fatality",
+		"b4cksl4sh",
+	];
 	//feetway
 	var wall:FlxSprite;
 	var porker:FlxSprite;
@@ -549,6 +542,7 @@ class PlayState extends MusicBeatState
 			SONG = Song.loadFromJson('tutorial');
 
 		sonicHUD = new FlxSpriteGroup();
+
 
 
 		Conductor.mapBPMChanges(SONG);
@@ -1425,7 +1419,7 @@ class PlayState extends MusicBeatState
 
 		switch (SONG.song.toLowerCase())
 		{
-			case 'b4cksl4sh' | 'fatality' | "milk" | "sunshine" :
+			case 'b4cksl4sh' | 'fatality' | "milk" | "sunshine" | "prey" :
 				isFixedAspectRatio = true;
 			default:
 				isFixedAspectRatio = false;
@@ -1433,13 +1427,11 @@ class PlayState extends MusicBeatState
 
 		if (isFixedAspectRatio)
 		{
-			camHUD.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
 
 			Lib.application.window.resizable = false;
 			FlxG.scaleMode = new StageSizeScaleMode();
 			FlxG.resizeGame(960, 720);
 			FlxG.resizeWindow(960, 720);
-
 
 		}
 
@@ -1635,6 +1627,10 @@ class PlayState extends MusicBeatState
 				dad.x -= 120;
 				dad.y -= 40;
 				add(fgTrees);
+			case 'cant-run-xd':
+				
+				sonicHUD.visible = false;
+
 			case 'needle':
 				add(needleFg);
 				dad2.visible = false;
@@ -1870,6 +1866,42 @@ class PlayState extends MusicBeatState
 			botplayTxt.y = timeBarBG.y - 78;
 		}
 
+		if(sonicHUDStyles.exists(SONG.song.toLowerCase()))hudStyle = sonicHUDStyles.get(SONG.song.toLowerCase());
+		var hudFolder = hudStyle;
+		if(hudStyle == 'soniccd')hudFolder = 'sonic1';
+		var scoreLabel:FlxSprite = new FlxSprite(15, 25).loadGraphic(Paths.image("sonicUI/" + hudFolder + "/score"));
+		scoreLabel.setGraphicSize(Std.int(scoreLabel.width * 3));
+		scoreLabel.updateHitbox();
+		scoreLabel.x = 15;
+		scoreLabel.antialiasing = false;
+		scoreLabel.scrollFactor.set();
+		sonicHUD.add(scoreLabel);
+
+		var timeLabel:FlxSprite = new FlxSprite(15, 70).loadGraphic(Paths.image("sonicUI/" + hudFolder + "/time"));
+		timeLabel.setGraphicSize(Std.int(timeLabel.width * 3));
+		timeLabel.updateHitbox();
+		timeLabel.x = 15;
+		timeLabel.antialiasing = false;
+		timeLabel.scrollFactor.set();
+		sonicHUD.add(timeLabel);
+
+		var ringsLabel:FlxSprite = new FlxSprite(15, 115).loadGraphic(Paths.image("sonicUI/" + hudFolder + "/rings"));
+		ringsLabel.setGraphicSize(Std.int(ringsLabel.width * 3));
+		ringsLabel.updateHitbox();
+		ringsLabel.x = 15;
+		ringsLabel.antialiasing = false;
+		ringsLabel.scrollFactor.set();
+
+		var missLabel:FlxSprite = new FlxSprite(15, 160).loadGraphic(Paths.image("sonicUI/" + hudFolder + "/misses"));
+		missLabel.setGraphicSize(Std.int(missLabel.width * 3));
+		missLabel.y = ringsLabel.y;
+		missLabel.updateHitbox();
+		missLabel.x = 15;
+		missLabel.antialiasing = false;
+		missLabel.scrollFactor.set();
+		sonicHUD.add(missLabel);
+
+		
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
@@ -1884,6 +1916,7 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
+		sonicHUD.cameras = [camHUD];
 		blackFuck.cameras = [camOther];
 		topBar.cameras = [camOther];
 		bottomBar.cameras = [camOther];
@@ -2809,11 +2842,23 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
+		
+		if(sonicHUDSongs.contains(SONG.song.toLowerCase())){
+			add(sonicHUD);
+		}
+
+		
 		inCutscene = false;
 		var ret:Dynamic = callOnLuas('onStartCountdown', [], false);
 		if(ret != FunkinLua.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
+			if(sonicHUDSongs.contains(SONG.song.toLowerCase()) && SONG.song.toLowerCase() != 'you-cant-run'){
+				healthBar.x += 150;
+				iconP1.x += 150;
+				iconP2.x += 150;
+				healthBarBG.x += 150;
+			}
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
@@ -4301,6 +4346,7 @@ class PlayState extends MusicBeatState
 						// filters.push(ShadersHandler.scanline);
 
 						isPixelStage = true;
+						sonicHUD.visible = true;
 
 
 						reloadHealthBarColors();
@@ -4332,15 +4378,20 @@ class PlayState extends MusicBeatState
 						isFixedAspectRatio = true;
 
 
-
-						camOther.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
-						camHUD.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
-
+						playerStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x -= 40;
+							});
+						opponentStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x -= 40;
+							});
 			
 						Lib.application.window.resizable = false;
 						FlxG.scaleMode = new StageSizeScaleMode();
 						FlxG.resizeGame(960, 720);
 						FlxG.resizeWindow(960, 720);
+
 						
 
 					case 2:
@@ -4355,6 +4406,8 @@ class PlayState extends MusicBeatState
 						pickle2.visible = false;
 						// filters.remove(ShadersHandler.scanline);
 						genesis.visible = true;
+						sonicHUD.visible=false;
+
 
 						reloadHealthBarColors();
 
@@ -4376,15 +4429,11 @@ class PlayState extends MusicBeatState
 
 
 	
-
 							Lib.application.window.resizable = true;
 							FlxG.scaleMode = new RatioScaleMode(false);
 							FlxG.resizeGame(1280, 720);
 							FlxG.resizeWindow(1280, 720);
 
-
-							camOther.x += 40; // Best fix ever 2022 (it's just for centering the camera lawl)
-							camHUD.x += 40; // Best fix ever 2022 (it's just for centering the camera lawl)
 
 
 						healthBar.x -= 250;
@@ -6550,6 +6599,8 @@ class PlayState extends MusicBeatState
 		}
 
 		if(isFixedAspectRatio){
+
+
 			
 			Lib.application.window.resizable = true;
 			FlxG.scaleMode = new RatioScaleMode(false);

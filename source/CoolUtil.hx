@@ -6,9 +6,13 @@ import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import flixel.system.FlxSound;
+
 #if sys
 import sys.io.File;
 import sys.FileSystem;
+import lime.app.Application;
+import lime.graphics.Image;
+
 #else
 import openfl.utils.Assets;
 #end
@@ -137,5 +141,10 @@ class CoolUtil
 		#else
 		FlxG.openURL(site);
 		#end
+	}
+	public static function setWindowIcon(image:String = 'iconOG') {
+		Image.loadFromFile(Paths.getPath('images/$image.png', IMAGE)).onComplete(function (img) {
+			Application.current.window.setIcon(img);
+		});
 	}
 }
