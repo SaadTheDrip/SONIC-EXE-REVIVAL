@@ -40,6 +40,8 @@ import flixel.addons.effects.FlxTrailArea;
 import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.display.FlxTiledSprite;
+
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -73,6 +75,7 @@ import Note;
 import openfl.events.KeyboardEvent;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
+
 import flixel.util.FlxSave;
 import animateatlas.AtlasFrameMaker;
 import Achievements;
@@ -83,6 +86,7 @@ import Conductor.Rating;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
+
 import openfl.filters.ShaderFilter;
 #end
 
@@ -282,7 +286,42 @@ class PlayState extends MusicBeatState
 	// because i need it
 	var FreddyFastBearFloor:BGSprite;
 
+	// - cutscene shit
+	var topBar:FlxSprite;
+	var bottomBar:FlxSprite;
 
+
+	//sonic hud related shit
+	public var sonicHUD:FlxSpriteGroup;
+	public var scoreNumbers:Array<SonicNumber>=[];
+	public var missNumbers:Array<SonicNumber>=[];
+	public var ringsNumbers:Array<SonicNumber>=[];
+	public var minNumber:SonicNumber;
+	public var secondNumberA:SonicNumber;
+	public var secondNumberB:SonicNumber;
+	public var millisecondNumberA:SonicNumber;
+	public var millisecondNumberB:SonicNumber;
+	public var sonicHUDSongs:Array<String> = [
+		"my-horizon",
+		"our-horizon",
+		"prey",
+		"fatality",
+		"b4cksl4sh",
+	];
+
+	var hudStyle:String = 'sonic2';
+	public var sonicHUDStyles:Map<String, String> = [
+
+		"fatality" => "sonic3",
+		"prey" => "soniccd",
+		"you-cant-run" => "sonic1", // because its green hill zone so it should be sonic1
+		"our-horizon" => "chaotix",
+		"my-horizon" => "chaotix"
+		// "songName" => "styleName",
+
+		// styles are sonic2 and sonic3
+		// defaults to sonic2 if its in sonicHUDSongs but not in here
+	];
 
 	//feetway
 	var wall:FlxSprite;
@@ -311,6 +350,12 @@ class PlayState extends MusicBeatState
 	var needleSky:BGSprite;
 	var needleRuins:BGSprite;
 	var needleFg:FlxSprite;
+
+	// starved shit
+	var stardustBgPixel:FlxTiledSprite;
+	var stardustFloorPixel:FlxTiledSprite;
+	var stardustFurnace:FlxSprite;
+	var hungryManJackTime:Int = 0;
 
 	//variables for stuff (strumline spins, zoom bools, etc...) shit
 	public static var isFixedAspectRatio:Bool = false;
@@ -503,6 +548,9 @@ class PlayState extends MusicBeatState
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
 
+		sonicHUD = new FlxSpriteGroup();
+
+
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
@@ -522,6 +570,13 @@ class PlayState extends MusicBeatState
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
 		#end
+
+		// I KNOW BLACKFUCK EXISTS BUT I AM SERIOUSLY STUPID
+		topBar = new FlxSprite(0, -170).makeGraphic(1280, 170, FlxColor.BLACK);
+		bottomBar = new FlxSprite(0, 720).makeGraphic(1280, 170, FlxColor.BLACK);
+		blackFuck = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+		blackFuck2 = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+
 
 		GameOverSubstate.resetVariables();
 		var songName:String = Paths.formatToSongPath(SONG.song);
@@ -678,6 +733,48 @@ class PlayState extends MusicBeatState
 				fgTrees = new BGSprite('PolishedP1/TreesFG', -610, -200, 1.1, 1.1);
 				fgTrees.setGraphicSize(Std.int(fgTrees.width * 1.45));
 
+
+				case 'starved-pixel':
+				trace("are you prey? AH EH OH A HE OH EHEEEEHE UUH AH E OH");
+
+					GameOverSubstate.characterName = 'bf-sonic-gameover';
+					GameOverSubstate.deathSoundName = 'prey-death';
+					GameOverSubstate.loopSoundName = 'prey-loop';
+					GameOverSubstate.endSoundName = 'prey-retry';
+	
+	
+					stardustBgPixel = new FlxTiledSprite(Paths.image('starved/stardustBg'), 4608, 2832, true, true);
+					stardustBgPixel.scrollFactor.set(0.4, 0.4);
+					/*stardustBgPixel.scale.x = 5;
+					stardustBgPixel.scale.y = 5;*/
+					//stardustBgPixel.y += 600;
+					//stardustBgPixel.x += 1000;
+					//stardustBgPixel.velocity.set(-2000, 0);
+	
+					stardustFloorPixel = new FlxTiledSprite(Paths.image('starved/stardustFloor'), 4608, 2832, true, true);
+					//stardustFloorPixel.setGraphicSize(Std.int(pizzaHutStage.width * 1.5));
+	
+					stardustBgPixel.visible = false;
+					stardustFloorPixel.visible = false;
+	
+					stardustFurnace = new FlxSprite(-500, 1450);
+					stardustFurnace.frames = Paths.getSparrowAtlas('starved/Furnace_sheet');
+					stardustFurnace.animation.addByPrefix('idle', 'Furnace idle', 24, true);
+					stardustFurnace.animation.play('idle');
+					stardustFurnace.scale.x = 6;
+					stardustFurnace.scale.y = 6;
+					stardustFurnace.antialiasing = false;
+	
+					/*stardustFloorPixel.scale.x = 6;
+					stardustFloorPixel.scale.y = 6;*/
+					//stardustFloorPixel.y += 600;
+					//stardustFloorPixel.x += 1000;
+					//stardustFloorPixel.velocity.set(-2500, 0);
+					stardustBgPixel.screenCenter();
+					stardustFloorPixel.screenCenter();
+	
+					add(stardustBgPixel);
+					add(stardustFurnace);
 
 			case 'endless-forest': // lmao
 				PlayState.SONG.splashSkin = 'noteSplashes';
@@ -1328,7 +1425,7 @@ class PlayState extends MusicBeatState
 
 		switch (SONG.song.toLowerCase())
 		{
-			case 'b4cksl4sh' | 'fatality' | "milk" :
+			case 'b4cksl4sh' | 'fatality' | "milk" | "sunshine" :
 				isFixedAspectRatio = true;
 			default:
 				isFixedAspectRatio = false;
@@ -1336,8 +1433,7 @@ class PlayState extends MusicBeatState
 
 		if (isFixedAspectRatio)
 		{
-			camOther.x -= 50; // Best fix ever 2022 (it's just for centering the camera lawl)
-			camHUD.x -= 50; // Best fix ever 2022 (it's just for centering the camera lawl)
+			camHUD.x -= 40; // Best fix ever 2022 (it's just for centering the camera lawl)
 
 			Lib.application.window.resizable = false;
 			FlxG.scaleMode = new StageSizeScaleMode();
@@ -1547,6 +1643,9 @@ class PlayState extends MusicBeatState
 				flyState = 'sHover';
 
 				boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.9));
+			case 'starved-pixel':
+				add(stardustFloorPixel);
+			
 			case 'limo':
 				resetFastCar();
 				addBehindGF(fastCar);
@@ -1785,6 +1884,12 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
+		blackFuck.cameras = [camOther];
+		topBar.cameras = [camOther];
+		bottomBar.cameras = [camOther];
+
+
+		
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -3360,6 +3465,28 @@ class PlayState extends MusicBeatState
 		}
 		
 
+		function cinematicBars(appear:Bool) //IF (TRUE) MOMENT?????
+			{
+				if (appear)
+				{
+					add(topBar);
+					add(bottomBar);
+					FlxTween.tween(topBar, {y: 0}, 0.5, {ease: FlxEase.quadOut});
+					FlxTween.tween(bottomBar, {y: 550}, 0.5, {ease: FlxEase.quadOut});
+				}
+				else
+				{
+					FlxTween.tween(topBar, {y: -170}, 0.5, {ease: FlxEase.quadOut});
+					FlxTween.tween(bottomBar, {y: 720}, 0.5, {ease: FlxEase.quadOut, onComplete: function(fuckme:FlxTween)
+					{
+						remove(topBar);
+						remove(bottomBar);
+					}});
+				}
+			}
+		
+			var lyricText:FlxText;
+			var lyricTween:FlxTween;
 
 	private function removeStatics()
 		{
@@ -3518,6 +3645,9 @@ class PlayState extends MusicBeatState
 	var canPause:Bool = true;
 	var limoSpeed:Float = 0;
 
+
+	var starvedSpeed:Float = 15;
+
 	override public function update(elapsed:Float)
 	{
 
@@ -3527,6 +3657,27 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
+
+		var targetSpeed:Float = 15;
+		switch (hungryManJackTime)
+		{
+			case 1:
+				targetSpeed = 35;
+			case 2:
+				targetSpeed = 50;
+			default:
+				targetSpeed = 25;
+		}
+		starvedSpeed = FlxMath.lerp(starvedSpeed, targetSpeed, 0.3*(elapsed/(1/60)));
+		if (targetSpeed - starvedSpeed < 0.2)
+			{
+				starvedSpeed = targetSpeed;
+			}
+		if (curStage == 'starved-pixel')
+		{
+			stardustBgPixel.scrollX -= (starvedSpeed * stardustBgPixel.scrollFactor.x) * (elapsed/(1/120));
+			stardustFloorPixel.scrollX -= starvedSpeed * (elapsed/(1/120));
+		}
 
 
 		if (isFixedAspectRatio)
@@ -4162,6 +4313,13 @@ class PlayState extends MusicBeatState
 						removeStatics();
 						generateStaticArrows(0);
 						generateStaticArrows(1);
+						for (i in notes)
+							{
+	
+								i.reloadNote();	
+	
+	
+							}
 						for (i in unspawnNotes)
 							{
 	
@@ -5921,7 +6079,94 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(camHUD, {alpha: 1}, 0.5);		
 			}
 		}
-		
+		if (SONG.song.toLowerCase() == 'prey')
+			{
+				switch (curStep)
+					{
+						case 1:
+
+							
+							boyfriend.alpha = 0;
+							camHUD.alpha = 0;
+							FlxTween.tween(boyfriend, {alpha: 1}, 6);
+
+						case 128:
+							FlxG.camera.flash(FlxColor.WHITE, 2);
+							FlxG.camera.zoom += 2;
+							stardustBgPixel.visible = true;
+							stardustFloorPixel.visible = true;
+
+						case 246:
+							FlxTween.tween(dad, {x: 580}, 1, {ease: FlxEase.cubeInOut});
+							FlxTween.tween(camHUD, {alpha: 1}, 1.2,{ease: FlxEase.cubeInOut});
+							camZooming = true;
+						case 1530:
+							FlxTween.tween(camHUD, {alpha: 0}, 0.75,{ease: FlxEase.cubeInOut});
+						case 1505:
+							FlxTween.tween(dad, {x: -1500}, 5, {ease: FlxEase.cubeInOut});
+							FlxTween.angle(dad, 0, -180, 5, {ease: FlxEase.cubeInOut});
+						case 1542:
+							dadGroup.visible = false;
+						case 1545:
+								cinematicBars(true);
+								dad.x -= 500;
+								dad.y += 100;
+						case 1548:
+							dadGroup.visible = true;
+						case 1547:
+							health = 1;
+							boyfriend.playAnim("first dialogue");
+							boyfriend.animation.finishCallback = function(slash:String)
+							{
+								hungryManJackTime = 2;
+								if (dad.animation.curAnim.name == "first dialogue")
+								{
+									boyfriend.specialAnim = false;
+								}
+							}
+							dad.playAnim("dialogue", true);
+							dad.specialAnim = true;
+							dad.animation.finishCallback = function(slash:String)
+							{
+								if (dad.animation.curAnim.name == "dialogue")
+								{
+									hungryManJackTime = 1;
+									cinematicBars(false);
+									dad.specialAnim = false;
+								}
+							}
+						case 1570:
+							FlxTween.tween(dad, {x: 1300}, 2.5,{ease: FlxEase.cubeInOut});
+						case 1780:
+							FlxTween.tween(camHUD, {alpha: 1}, 1.0);
+						case 2432:
+							FlxTween.tween(stardustFurnace, {x: 3000}, 7);
+						case 3328:
+							FlxTween.tween(camHUD, {alpha: 0}, 1,{ease: FlxEase.cubeInOut});
+							FlxTween.tween(dad, {x: -300}, 4,{ease: FlxEase.cubeInOut});
+						case 3335:
+							boyfriend.playAnim("dialogue peel");
+							boyfriend.specialAnim = true;
+						case 3367:
+							FlxG.camera.flash(FlxColor.RED, 2);
+							boyfriendGroup.visible = false;
+							dadGroup.visible = false;
+							stardustFurnace.visible = false;
+							stardustBgPixel.visible = false;
+							stardustFloorPixel.visible = false;
+						case 3364:
+							cinematicBars(true);
+							var gotcha:FlxSprite = new FlxSprite(boyfriend.x + 1500, boyfriend.y + 505).loadGraphic(Paths.image('furnace_gotcha'));
+							gotcha.setGraphicSize(Std.int(gotcha.width * 5));
+							gotcha.antialiasing = false;
+							gotcha.flipX = true;
+							add(gotcha);
+							FlxTween.tween(gotcha, {x: boyfriend.x + 500}, 0.2, {onComplete: function(yes:FlxTween)
+							{
+								remove(gotcha);
+							}});
+					}
+			}		
 
 			if (SONG.song.toLowerCase() == 'too-fest')
 				{
@@ -6305,6 +6550,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if(isFixedAspectRatio){
+			
 			Lib.application.window.resizable = true;
 			FlxG.scaleMode = new RatioScaleMode(false);
 			FlxG.resizeGame(1280, 720);
