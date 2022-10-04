@@ -273,6 +273,11 @@ class PlayState extends MusicBeatState
 	//nebs modchart shit
 	var curShader:ShaderFilter;
 
+		// - ring counter bullshit
+		var ringCounter:FlxSprite;
+		var counterNum:FlxText;
+		var cNum:Int = 0;
+
 	// sonic.exe (ycr/triple trouble)
 	var pickle:FlxSprite;
 	var pickle2:FlxSprite;
@@ -292,7 +297,16 @@ class PlayState extends MusicBeatState
 
 
 	//sonic hud related shit
+	public var ringsNumbers:Array<SonicNumber>=[];
+	public var minNumber:SonicNumber;
 	public var sonicHUD:FlxSpriteGroup;
+	public var scoreNumbers:Array<SonicNumber>=[];
+	public var missNumbers:Array<SonicNumber>=[];
+	public var secondNumberA:SonicNumber;
+	public var secondNumberB:SonicNumber;
+	public var millisecondNumberA:SonicNumber;
+	public var millisecondNumberB:SonicNumber;
+
 
 	var hudStyle:String = 'sonic2';
 	public var sonicHUDStyles:Map<String, String> = [
@@ -328,6 +342,8 @@ class PlayState extends MusicBeatState
 	var warning:FlxSprite;
 	var dodgething:FlxSprite;
 
+	var shit:Bool = false;
+
 	// Preload vars so no null obj ref
 	var daNoteStatic:FlxSprite;
 	var preloaded:Bool = false;
@@ -349,6 +365,26 @@ class PlayState extends MusicBeatState
 	var stardustFloorPixel:FlxTiledSprite;
 	var stardustFurnace:FlxSprite;
 	var hungryManJackTime:Int = 0;
+
+	// - fight or flight
+	var deadHedgehog:BGSprite;
+	var mcdonaldTowers:BGSprite;
+	var burgerKingCities:BGSprite;
+	var wendysLight:FlxSprite;
+	var pizzaHutStage:BGSprite;
+
+	// - the fear mechanic
+	var fearUi:FlxSprite;
+	var fearUiBg:FlxSprite;
+	var fearTween:FlxTween;
+	var fearTimer:FlxTimer;
+
+	public var fearNo:Float = 0;
+
+	public var fearBar:FlxBar;
+	public static var isFear:Bool = false;
+	var doFearCheck = false;
+	var fearNum:FlxText;
 
 	//variables for stuff (strumline spins, zoom bools, etc...) shit
 	public static var isFixedAspectRatio:Bool = false;
@@ -770,6 +806,53 @@ class PlayState extends MusicBeatState
 					add(stardustBgPixel);
 					add(stardustFurnace);
 
+			case 'starved':
+				// fhjdslafhlsa dead hedgehogs
+
+				/*———————————No hedgehogs?———————————
+				⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝
+				⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇
+				⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀
+				⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀
+				⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀
+				⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀
+				⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀
+				⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀
+				⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+				⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+				⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+				⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+				⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+				—————————————————————————————*/
+
+				GameOverSubstate.deathSoundName = 'starved-death';
+				GameOverSubstate.loopSoundName = 'starved-loop';
+				GameOverSubstate.endSoundName = 'starved-retry';
+				GameOverSubstate.characterName = 'bf-starved-die';
+
+				defaultCamZoom = 0.85;
+
+				burgerKingCities = new BGSprite('starved/city', -100, 0, 1, 0.9);
+				burgerKingCities.setGraphicSize(Std.int(burgerKingCities.width * 1.5));
+				add(burgerKingCities);
+
+				mcdonaldTowers = new BGSprite('starved/towers', -100, 0, 1, 0.9);
+				mcdonaldTowers.setGraphicSize(Std.int(mcdonaldTowers.width * 1.5));
+				add(mcdonaldTowers);
+
+				pizzaHutStage = new BGSprite('starved/stage', -100, 0, 1, 0.9);
+				pizzaHutStage.setGraphicSize(Std.int(pizzaHutStage.width * 1.5));
+				add(pizzaHutStage);
+
+				// sonic died
+				deadHedgehog = new BGSprite('starved/sonicisfuckingdead', 0, 100, 1, 0.9);
+				deadHedgehog.setGraphicSize(Std.int(deadHedgehog.width * 0.65));
+				add(deadHedgehog);
+
+				// hes still dead
+
+				wendysLight = new BGSprite('starved/light', 0, 0, 1, 0.9);
+				wendysLight.setGraphicSize(Std.int(wendysLight.width * 1.2));
 			case 'endless-forest': // lmao
 				PlayState.SONG.splashSkin = 'noteSplashes';
 				var SKY:BGSprite = new BGSprite('FunInfiniteStage/sonicFUNsky', -600, -200, 1.0, 1.0);
@@ -1627,8 +1710,12 @@ class PlayState extends MusicBeatState
 				dad.x -= 120;
 				dad.y -= 40;
 				add(fgTrees);
+
+
+
 			case 'cant-run-xd':
-				
+
+
 				sonicHUD.visible = false;
 
 			case 'needle':
@@ -1641,7 +1728,12 @@ class PlayState extends MusicBeatState
 				boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.9));
 			case 'starved-pixel':
 				add(stardustFloorPixel);
-			
+
+				case 'starved':
+					// boyfriend.x -= 500;
+					boyfriend.y += 75;
+					dad.x += 300;
+					dad.y -= 350;			
 			case 'limo':
 				resetFastCar();
 				addBehindGF(fastCar);
@@ -1866,6 +1958,35 @@ class PlayState extends MusicBeatState
 			botplayTxt.y = timeBarBG.y - 78;
 		}
 
+				// nabbed this code from starlight lmao
+				if (dad.curCharacter == 'starved')
+					{
+						fearUi = new FlxSprite().loadGraphic(Paths.image('fearbar'));
+						fearUi.scrollFactor.set();
+						fearUi.screenCenter();
+						fearUi.x += 580;
+						fearUi.y -= 50;
+			
+						fearUiBg = new FlxSprite(fearUi.x, fearUi.y).loadGraphic(Paths.image('fearbarBG'));
+						fearUiBg.scrollFactor.set();
+						fearUiBg.screenCenter();
+						fearUiBg.x += 580;
+						fearUiBg.y -= 50;
+						add(fearUiBg);
+			
+						fearBar = new FlxBar(fearUi.x + 30, fearUi.y + 5, BOTTOM_TO_TOP, 21, 275, this,
+						'fearNo', 0, 100);
+						fearBar.scrollFactor.set();
+						fearBar.createFilledBar(0xFF000000, FlxColor.RED);
+						timeBar.numDivisions = 800; // How much lag this causes?? Should i tone it down to idk, 400 or 200?
+						fearBar.visible = true;
+						trace('bar added.');
+			
+						add(fearBar);
+						add(fearUi);
+
+					}
+
 		if(sonicHUDStyles.exists(SONG.song.toLowerCase()))hudStyle = sonicHUDStyles.get(SONG.song.toLowerCase());
 		var hudFolder = hudStyle;
 		if(hudStyle == 'soniccd')hudFolder = 'sonic1';
@@ -1901,6 +2022,152 @@ class PlayState extends MusicBeatState
 		missLabel.scrollFactor.set();
 		sonicHUD.add(missLabel);
 
+		// score numbers
+		if(hudFolder=='sonic3'){
+			for(i in 0...7){
+				var number = new SonicNumber(0, 0, 0);
+				number.folder = hudFolder;
+				number.setGraphicSize(Std.int(number.width*3));
+				number.updateHitbox();
+				number.x = scoreLabel.x + scoreLabel.width + ((9 * i) * 3);
+				number.y = scoreLabel.y;
+				scoreNumbers.push(number);
+				sonicHUD.add(number);
+			}
+		}else{
+			for(i in 0...7){
+				var number = new SonicNumber(0, 0, 0);
+				number.folder = hudFolder;
+				number.setGraphicSize(Std.int(number.width*3));
+				number.updateHitbox();
+				number.x = scoreLabel.x + scoreLabel.width + ((9 * i) * 3);
+				number.y = scoreLabel.y;
+				scoreNumbers.push(number);
+				sonicHUD.add(number);
+			}
+		}
+
+		// ring numbers
+		for(i in 0...3){
+			var number = new SonicNumber(0, 0, 0);
+			number.folder = hudFolder;
+			number.setGraphicSize(Std.int(number.width*3));
+			number.updateHitbox();
+			number.x = ringsLabel.x + ringsLabel.width + (6*3) + ((9 * i) * 3);
+			number.y = ringsLabel.y;
+			ringsNumbers.push(number);
+		}
+
+		// miss numbers
+		for(i in 0...4){
+			var number = new SonicNumber(0, 0, 0);
+			number.folder = hudFolder;
+			number.setGraphicSize(Std.int(number.width*3));
+			number.updateHitbox();
+			number.x = missLabel.x + missLabel.width + (6*3) + ((9 * i) * 3);
+			number.y = missLabel.y;
+			missNumbers.push(number);
+			sonicHUD.add(number);
+		}
+
+
+		// time numbers
+		minNumber = new SonicNumber(0, 0, 0);
+		minNumber.folder = hudFolder;
+		minNumber.setGraphicSize(Std.int(minNumber.width*3));
+		minNumber.updateHitbox();
+		minNumber.x = timeLabel.x + timeLabel.width;
+		minNumber.y = timeLabel.y;
+		sonicHUD.add(minNumber);
+
+		var timeColon:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image("sonicUI/" + hudFolder + "/colon"));
+		timeColon.setGraphicSize(Std.int(timeColon.width * 3));
+		timeColon.updateHitbox();
+		timeColon.x = 170;
+		timeColon.y = timeLabel.y;
+		timeColon.antialiasing = false;
+		timeColon.scrollFactor.set();
+		sonicHUD.add(timeColon);
+
+		secondNumberA = new SonicNumber(0, 0, 0);
+		secondNumberA.folder = hudFolder;
+		secondNumberA.setGraphicSize(Std.int(secondNumberA.width*3));
+		secondNumberA.updateHitbox();
+		secondNumberA.x = 186;
+		secondNumberA.y = timeLabel.y;
+		sonicHUD.add(secondNumberA);
+
+		secondNumberB = new SonicNumber(0, 0, 0);
+		secondNumberB.folder = hudFolder;
+		secondNumberB.setGraphicSize(Std.int(secondNumberB.width*3));
+		secondNumberB.updateHitbox();
+		secondNumberB.x = 213;
+		secondNumberB.y = timeLabel.y;
+		sonicHUD.add(secondNumberB);
+
+		var timeQuote:FlxSprite = new FlxSprite(0, 0);
+		if(hudFolder=='chaotix'){
+			timeQuote.loadGraphic(Paths.image("sonicUI/" + hudFolder + "/quote"));
+			timeQuote.setGraphicSize(Std.int(timeQuote.width * 3));
+			timeQuote.updateHitbox();
+			timeQuote.x = secondNumberB.x + secondNumberB.width;
+			timeQuote.y = timeLabel.y;
+			timeQuote.antialiasing = false;
+			timeQuote.scrollFactor.set();
+			sonicHUD.add(timeQuote);
+
+			millisecondNumberA = new SonicNumber(0, 0, 0);
+			millisecondNumberA.folder = hudFolder;
+			millisecondNumberA.setGraphicSize(Std.int(millisecondNumberA.width*3));
+			millisecondNumberA.updateHitbox();
+			millisecondNumberA.x = timeQuote.x + timeQuote.width + (2*3);
+			millisecondNumberA.y = timeLabel.y;
+			sonicHUD.add(millisecondNumberA);
+
+			millisecondNumberB = new SonicNumber(0, 0, 0);
+			millisecondNumberB.folder = hudFolder;
+			millisecondNumberB.setGraphicSize(Std.int(millisecondNumberB.width*3));
+			millisecondNumberB.updateHitbox();
+			millisecondNumberB.x = millisecondNumberA.x + millisecondNumberA.width + 3;
+			millisecondNumberB.y = timeLabel.y;
+			sonicHUD.add(millisecondNumberB);
+		}
+
+		switch(hudFolder){
+			case 'chaotix':
+				minNumber.x = timeLabel.x + timeLabel.width + (4*3);
+				timeColon.x = minNumber.x + minNumber.width + (2*3);
+				secondNumberA.x = timeColon.x + timeColon.width + (4*3);
+				secondNumberB.x = secondNumberA.x + secondNumberA.width + 3;
+				timeQuote.x = secondNumberB.x + secondNumberB.width;
+				millisecondNumberA.x = timeQuote.x + timeQuote.width + (2*3);
+				millisecondNumberB.x = millisecondNumberA.x + millisecondNumberA.width + 3;
+			default:
+
+		}
+
+		if(sonicHUDSongs.contains(SONG.song.toLowerCase())){
+			scoreTxt.visible=false;
+			timeBar.visible = showTime;
+			timeTxt.visible=showTime;
+			timeBarBG.visible=showTime;
+			add(sonicHUD);
+		}
+
+		if(!ClientPrefs.downScroll){
+			for(member in sonicHUD.members){
+				member.y = FlxG.height-member.height-member.y;
+			}
+		}
+
+
+
+		updateSonicScore();
+		updateSonicMisses();
+
+
+
+
 		
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
@@ -1916,11 +2183,26 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
+		if (dad.curCharacter == 'starved')
+			{
+				fearUiBg.cameras = [camHUD];
+				fearBar.cameras = [camHUD];
+				fearUi.cameras = [camHUD];
+			}
+
 		sonicHUD.cameras = [camHUD];
 		blackFuck.cameras = [camOther];
 		topBar.cameras = [camOther];
 		bottomBar.cameras = [camOther];
 
+		if(SONG.song.toLowerCase()=='you-cant-run'){
+			scoreTxt.visible= true;
+			timeBar.visible = true;
+			timeBarBG.visible = true;
+			timeTxt.visible = true;
+
+			sonicHUD.visible=false;
+		}
 
 		
 		// if (SONG.song == 'South')
@@ -2844,7 +3126,16 @@ class PlayState extends MusicBeatState
 
 		
 		if(sonicHUDSongs.contains(SONG.song.toLowerCase())){
+			scoreTxt.visible = !ClientPrefs.hideHud;
+			timeBar.visible=false;
+			timeTxt.visible=false;
+			timeBarBG.visible=false;
 			add(sonicHUD);
+		}
+		if(!ClientPrefs.downScroll){
+			for(member in sonicHUD.members){
+				member.y = FlxG.height-member.height-member.y;
+			}
 		}
 
 		
@@ -2854,6 +3145,8 @@ class PlayState extends MusicBeatState
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
 			if(sonicHUDSongs.contains(SONG.song.toLowerCase()) && SONG.song.toLowerCase() != 'you-cant-run'){
+
+
 				healthBar.x += 150;
 				iconP1.x += 150;
 				iconP2.x += 150;
@@ -2893,6 +3186,39 @@ class PlayState extends MusicBeatState
 				return;
 			}
 
+			if (curStage == 'starved')
+				{
+					if (!ClientPrefs.middleScroll)
+						{
+							playerStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x -= 322;
+								spr.y -= 35;
+								spr.alpha = 0.65;
+							});
+							opponentStrums.forEach(function(spr:FlxSprite)
+							{
+								spr.x += 5000;
+							});
+						}
+						healthBar.angle += 90;
+						healthBar.screenCenter();
+						healthBar.x += 500;
+
+						iconP1.x += 1050;
+						iconP2.x += 1050;
+
+						healthBarBG.angle += 90;
+						healthBarBG.x += 500;
+
+						timeBar.y = scoreTxt.y - 40;
+						timeBarBG.y = scoreTxt.y - 40;
+						timeTxt.y = scoreTxt.y - 52;
+
+						healthBar.alpha = 0.75;
+						healthBarBG.alpha = 0.75;
+						scoreTxt.alpha = 0.75;
+				}
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 			{
 				if (gf != null && tmr.loopsLeft % Math.round(gfSpeed * gf.danceEveryNumBeats) == 0 && gf.animation.curAnim != null && !gf.animation.curAnim.name.startsWith("sing") && !gf.stunned)
@@ -3657,6 +3983,14 @@ class PlayState extends MusicBeatState
 		super.onFocus();
 	}
 
+	public function triggerEvent (name:String, arg1:Dynamic, arg2:Dynamic) {
+		var value1:String = arg1;
+		var value2:String = arg2;
+		PlayState.instance.triggerEventNote(name, value1, value2);
+		//trace('Triggered event: ' + name + ', ' + value1 + ', ' + value2);
+		return true;
+	}
+
 	override public function onFocusLost():Void
 	{
 		#if desktop
@@ -3696,7 +4030,66 @@ class PlayState extends MusicBeatState
 	override public function update(elapsed:Float)
 	{
 
-		
+
+
+
+		if (dad.curCharacter == 'starved')
+			{
+				isFear = true;
+				fearBar.visible = true;
+				fearBar.filledCallback = function()
+				{
+					health = 0;
+				}
+				// this is such a shitcan method i really should come up with something better tbf
+				
+				if (fearNo >= 50 && fearNo < 59)
+				{
+					health -= 0.1 * elapsed;
+
+
+
+				}
+
+				if (fearNo >= 60 && fearNo < 69) 
+				{
+					health -= 0.13 * elapsed;
+					
+					if(!shit){
+					triggerEvent("RedVG", "", "");
+					}
+						
+
+
+				}				
+				else if (fearNo >= 70 && fearNo < 79)
+				{
+					health -= 0.17 * elapsed;
+
+
+				}
+				else if (fearNo >= 80 && fearNo < 89)
+				{
+					health -= 0.20 * elapsed;
+
+
+				}					
+				else if (fearNo >= 90 && fearNo < 99)
+				{
+					health -= 0.35 * elapsed;
+
+
+				}
+			
+				if (health <= 0.01)
+				{
+					health = 0.01;
+				}
+
+
+			}
+
+
 		/*if (FlxG.keys.justPressed.NINE)
 		{
 			iconP1.swapOldIcon();
@@ -3727,6 +4120,7 @@ class PlayState extends MusicBeatState
 
 		if (isFixedAspectRatio)
 			FlxG.fullscreen = false;
+
 
 		switch (flyState)
 		{
@@ -3919,11 +4313,36 @@ class PlayState extends MusicBeatState
 		iconP2.scale.set(mult, mult);
 		iconP2.updateHitbox();
 
-		var iconOffset:Int = 26;
+		var iconOffset:Int;
+		switch (curStage)
+			{
+				case 'starved':
+					iconOffset = 270;
+				default:
+					iconOffset = 26;
+			}
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-
+			switch (curStage)
+			{
+				case 'starved':
+					iconP1.y = healthBar.y
+					+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
+					+ (150 * iconP1.scale.x - 150) / 2
+					- iconOffset;
+						iconP2.y = healthBar.y
+					+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
+					- (150 * iconP2.scale.x) / 2
+					- iconOffset;
+				default:
+					iconP1.x = healthBar.x
+					+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
+					+ (150 * iconP1.scale.x - 150) / 2
+					- iconOffset;
+						iconP2.x = healthBar.x
+					+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
+					- (150 * iconP2.scale.x) / 2
+					- iconOffset * 2;
+			}
 		if (health > 2)
 			health = 2;
 
@@ -4346,8 +4765,9 @@ class PlayState extends MusicBeatState
 						// filters.push(ShadersHandler.scanline);
 
 						isPixelStage = true;
-						sonicHUD.visible = true;
 
+						
+						sonicHUD.visible = true;
 
 						reloadHealthBarColors();
 
@@ -4415,14 +4835,6 @@ class PlayState extends MusicBeatState
 						generateStaticArrows(0);
 						generateStaticArrows(1);
 
-						for (i in notes)
-							{
-	
-								i.reloadNote();	
-	
-	
-							}
-								
 
 							aspectRatio = false;
 							isFixedAspectRatio = false;
@@ -4434,7 +4846,13 @@ class PlayState extends MusicBeatState
 							FlxG.resizeGame(1280, 720);
 							FlxG.resizeWindow(1280, 720);
 
-
+							for (i in unspawnNotes)
+								{
+		
+									i.reloadNote();	
+		
+		
+								}
 
 						healthBar.x -= 250;
 						iconP1.x -= 250;
@@ -4447,6 +4865,10 @@ class PlayState extends MusicBeatState
 					vg.alpha = 0;
 					vg.cameras = [camHUD];
 					add(vg);
+
+					shit = true;
+
+					trace('porn');
 
 
 
@@ -5121,6 +5543,84 @@ class PlayState extends MusicBeatState
 		eventNotes = [];
 	}
 
+	function updateSonicScore(){
+		var seperatedScore:Array<String> = Std.string(songScore).split("");
+		if(seperatedScore.length<scoreNumbers.length){
+			for(idx in seperatedScore.length...scoreNumbers.length){
+				if(hudStyle == 'chaotix' || hudStyle == 'sonic3' || hudStyle == 'soniccd'){
+					seperatedScore.unshift('');
+				}else{
+					seperatedScore.unshift('0');
+				}
+			}
+		}
+		if(seperatedScore.length>scoreNumbers.length)
+			seperatedScore.resize(scoreNumbers.length);
+
+		for(idx in 0...seperatedScore.length){
+			if(seperatedScore[idx]!='' || idx==scoreNumbers.length-1){
+				var val = Std.parseInt(seperatedScore[idx]);
+				if(Math.isNaN(val))val=0;
+				scoreNumbers[idx].number = val;
+				scoreNumbers[idx].visible=true;
+			}else
+				scoreNumbers[idx].visible=false;
+
+		}
+	}
+
+	function updateSonicMisses(){
+		var seperatedScore:Array<String> = Std.string(songMisses).split("");
+		if(seperatedScore.length<missNumbers.length){
+			for(idx in seperatedScore.length...missNumbers.length){
+				if(hudStyle == 'chaotix' || hudStyle == 'sonic3' || hudStyle == 'soniccd'){
+					seperatedScore.unshift('');
+				}else{
+					seperatedScore.unshift('0');
+				}
+			}
+		}
+		if(seperatedScore.length>missNumbers.length)
+			seperatedScore.resize(missNumbers.length);
+
+		for(idx in 0...seperatedScore.length){
+			if(seperatedScore[idx]!='' || idx==missNumbers.length-1){
+				var val = Std.parseInt(seperatedScore[idx]);
+				if(Math.isNaN(val))val=0;
+				missNumbers[idx].number = val;
+				missNumbers[idx].visible=true;
+			}else
+				missNumbers[idx].visible=false;
+
+		}
+	}
+
+	function updateSonicRings(){
+		var seperatedScore:Array<String> = Std.string(cNum).split("");
+		if(seperatedScore.length<ringsNumbers.length){
+			for(idx in seperatedScore.length...ringsNumbers.length){
+				if(hudStyle == 'chaotix' || hudStyle == 'sonic3' || hudStyle == 'soniccd'){
+					seperatedScore.unshift('');
+				}else{
+					seperatedScore.unshift('0');
+				}
+			}
+		}
+		if(seperatedScore.length>ringsNumbers.length)
+			seperatedScore.resize(ringsNumbers.length);
+
+		for(idx in 0...seperatedScore.length){
+			if(seperatedScore[idx]!='' || idx==ringsNumbers.length-1){
+				var val = Std.parseInt(seperatedScore[idx]);
+				if(Math.isNaN(val))val=0;
+				ringsNumbers[idx].number = val;
+				ringsNumbers[idx].visible=true;
+			}else
+				ringsNumbers[idx].visible=false;
+
+		}
+	}
+
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0.0;
 
@@ -5183,6 +5683,8 @@ class PlayState extends MusicBeatState
 
 		if(!practiceMode && !cpuControlled) {
 			songScore += score;
+			updateSonicScore();
+
 			if(!note.ratingDisabled)
 			{
 				songHits++;
@@ -5532,7 +6034,9 @@ class PlayState extends MusicBeatState
 		});
 		combo = 0;
 		health -= daNote.missHealth * healthLoss;
-		
+		fearNo += 5;
+		updateSonicMisses();
+
 		if(instakillOnMiss)
 		{
 			vocals.volume = 0;
@@ -5667,6 +6171,13 @@ class PlayState extends MusicBeatState
 		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)), time);
 		note.hitByOpponent = true;
 
+		if (dad.curCharacter == 'starved')
+			{
+				fearNo += 0.15;
+				// trace(fearNo);
+			}
+
+			
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 
 		if (!note.isSustainNote)
@@ -5675,6 +6186,8 @@ class PlayState extends MusicBeatState
 			notes.remove(note, true);
 			note.destroy();
 		}
+
+
 	}
 
 	function goodNoteHit(note:Note):Void
@@ -5775,6 +6288,12 @@ class PlayState extends MusicBeatState
 			}
 			note.wasGoodHit = true;
 			vocals.volume = 1;
+
+			if (isFear)
+				{
+					fearNo -= 0.1;
+					//trace(fearNo);
+				}
 
 			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 			var leData:Int = Math.round(Math.abs(note.noteData));
@@ -6134,6 +6653,14 @@ class PlayState extends MusicBeatState
 					{
 						case 1:
 
+							playerStrums.forEach(function(spr:FlxSprite)
+								{
+									spr.x -= 45;
+								});
+								opponentStrums.forEach(function(spr:FlxSprite)
+								{
+									spr.x -= 45;
+								});
 							
 							boyfriend.alpha = 0;
 							camHUD.alpha = 0;
@@ -6141,7 +6668,6 @@ class PlayState extends MusicBeatState
 
 						case 128:
 							FlxG.camera.flash(FlxColor.WHITE, 2);
-							FlxG.camera.zoom += 2;
 							stardustBgPixel.visible = true;
 							stardustFloorPixel.visible = true;
 
@@ -6173,6 +6699,7 @@ class PlayState extends MusicBeatState
 									boyfriend.specialAnim = false;
 								}
 							}
+
 							dad.playAnim("dialogue", true);
 							dad.specialAnim = true;
 							dad.animation.finishCallback = function(slash:String)
@@ -6599,6 +7126,10 @@ class PlayState extends MusicBeatState
 		}
 
 		if(isFixedAspectRatio){
+
+
+			camHUD.x -= 50; // Best fix ever 2022 (it's just for centering the camera lawl)
+			sonicHUD.x += 50; // Best fix ever 2022 (it's just for centering the camera lawl)
 
 
 			

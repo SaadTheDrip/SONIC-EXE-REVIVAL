@@ -67,6 +67,7 @@ class ChartingState extends MusicBeatState
 		'GF Sing',
 		'Static Note',
 		'No Animation',
+		'Pixel Note',
 
 
 	];
