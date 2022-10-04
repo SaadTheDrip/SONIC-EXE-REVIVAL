@@ -1511,6 +1511,9 @@ class PlayState extends MusicBeatState
 		if (isFixedAspectRatio)
 		{
 
+			camHUD.x -= 50;
+
+
 			Lib.application.window.resizable = false;
 			FlxG.scaleMode = new StageSizeScaleMode();
 			FlxG.resizeGame(960, 720);
@@ -2190,7 +2193,7 @@ class PlayState extends MusicBeatState
 				fearUi.cameras = [camHUD];
 			}
 
-		sonicHUD.cameras = [camHUD];
+		sonicHUD.cameras = [camOther];
 		blackFuck.cameras = [camOther];
 		topBar.cameras = [camOther];
 		bottomBar.cameras = [camOther];
@@ -4798,14 +4801,7 @@ class PlayState extends MusicBeatState
 						isFixedAspectRatio = true;
 
 
-						playerStrums.forEach(function(spr:FlxSprite)
-							{
-								spr.x -= 40;
-							});
-						opponentStrums.forEach(function(spr:FlxSprite)
-							{
-								spr.x -= 40;
-							});
+						camHUD.x -= 50;
 			
 						Lib.application.window.resizable = false;
 						FlxG.scaleMode = new StageSizeScaleMode();
@@ -4839,7 +4835,7 @@ class PlayState extends MusicBeatState
 							aspectRatio = false;
 							isFixedAspectRatio = false;
 
-
+							camHUD.x += 50;
 	
 							Lib.application.window.resizable = true;
 							FlxG.scaleMode = new RatioScaleMode(false);
@@ -7128,7 +7124,7 @@ class PlayState extends MusicBeatState
 		if(isFixedAspectRatio){
 
 
-			camHUD.x -= 50; // Best fix ever 2022 (it's just for centering the camera lawl)
+			camHUD.x -= 70; // Best fix ever 2022 (it's just for centering the camera lawl)
 			sonicHUD.x += 50; // Best fix ever 2022 (it's just for centering the camera lawl)
 
 
