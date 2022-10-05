@@ -4050,6 +4050,8 @@ class PlayState extends MusicBeatState
 				{
 					health -= 0.1 * elapsed;
 
+					triggerEvent("Change Scroll Speed", "1.1", "");
+
 
 
 				}
@@ -4061,6 +4063,8 @@ class PlayState extends MusicBeatState
 					if(!shit){
 					triggerEvent("RedVG", "", "");
 					}
+
+					triggerEvent("Change Scroll Speed", "1.3", "1");
 						
 
 
@@ -4069,17 +4073,22 @@ class PlayState extends MusicBeatState
 				{
 					health -= 0.17 * elapsed;
 
+					triggerEvent("Change Scroll Speed", "1.4", "1");
+
 
 				}
 				else if (fearNo >= 80 && fearNo < 89)
 				{
 					health -= 0.20 * elapsed;
 
+					triggerEvent("Change Scroll Speed", "1.5", "1");
 
 				}					
 				else if (fearNo >= 90 && fearNo < 99)
 				{
 					health -= 0.35 * elapsed;
+
+					triggerEvent("Change Scroll Speed", "1.6", "1");
 
 
 				}
@@ -4800,6 +4809,8 @@ class PlayState extends MusicBeatState
 						aspectRatio = true;
 						isFixedAspectRatio = true;
 
+						scoreTxt.visible= false;
+
 
 						camHUD.x -= 50;
 			
@@ -4835,7 +4846,7 @@ class PlayState extends MusicBeatState
 							aspectRatio = false;
 							isFixedAspectRatio = false;
 
-							camHUD.x += 50;
+							camHUD.x += 100;
 	
 							Lib.application.window.resizable = true;
 							FlxG.scaleMode = new RatioScaleMode(false);
