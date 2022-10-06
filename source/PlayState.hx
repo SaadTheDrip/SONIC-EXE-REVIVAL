@@ -6180,7 +6180,7 @@ class PlayState extends MusicBeatState
 
 		if (dad.curCharacter == 'starved')
 			{
-				fearNo += 0.15;
+				fearNo += 0.1;
 				// trace(fearNo);
 			}
 
