@@ -5751,9 +5751,7 @@
 		"needsVoices": false,
 		"validScore": true,
 		"stage": "cant-run-xd",
-		"arrowSkin": "",
 		"speed": 3.5,
-		"bpm": 140,
-		"noteStyle": null
+		"bpm": 140
 	}
 }

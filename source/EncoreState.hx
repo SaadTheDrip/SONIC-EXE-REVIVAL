@@ -59,6 +59,7 @@ class EncoreState extends MusicBeatState
 		['Too Slow Encore',		'too-slow-encore', '1'],
 		["You Can't Run Encore",		'you-cant-run-encore', '2'],
 		['Triple Trouble Encore',		'Triple-Trouble-Encore', '3'],
+		['Endless Encore',		'Endless-Encore', '4'],
 
 	];
 

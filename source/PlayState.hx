@@ -314,6 +314,7 @@ class PlayState extends MusicBeatState
 		"fatality" => "sonic3",
 		"prey" => "soniccd",
 		"you-cant-run" => "sonic1", // because its green hill zone so it should be sonic1
+		"you-cant-run-encore" => "sonic1", // because its green hill zone so it should be sonic1
 		"our-horizon" => "chaotix",
 		"my-horizon" => "chaotix"
 		// "songName" => "styleName",
@@ -327,6 +328,7 @@ class PlayState extends MusicBeatState
 		"our-horizon",
 		"prey",
 		"you-cant-run", // for the pixel part in specific
+		"you-cant-run-encore", // for the pixel part in specific
 		"fatality",
 		"b4cksl4sh",
 	];
@@ -2206,6 +2208,14 @@ class PlayState extends MusicBeatState
 
 			sonicHUD.visible=false;
 		}
+		if(SONG.song.toLowerCase()=='you-cant-run-encore'){
+			scoreTxt.visible= true;
+			timeBar.visible = true;
+			timeBarBG.visible = true;
+			timeTxt.visible = true;
+
+			sonicHUD.visible=false;
+		}
 
 		
 		// if (SONG.song == 'South')
@@ -2521,9 +2531,12 @@ class PlayState extends MusicBeatState
 	}
 
 	public function reloadHealthBarColors() {
-		healthBar.createFilledBar(FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]),
-			FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]));
-
+		if (!bfIsLeft)
+			healthBar.createFilledBar(FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]),
+				FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]));
+		else
+			healthBar.createFilledBar(FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]),
+				FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]));
 		healthBar.updateBar();
 	}
 
@@ -2658,6 +2671,8 @@ class PlayState extends MusicBeatState
 			video.visible=true;
 		}
 		add(video);
+
+		trace(name);
 	}
 
 	
@@ -3155,6 +3170,7 @@ class PlayState extends MusicBeatState
 				iconP2.x += 150;
 				healthBarBG.x += 150;
 			}
+			
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
@@ -4030,8 +4046,11 @@ class PlayState extends MusicBeatState
 
 	var starvedSpeed:Float = 15;
 
+
+
 	override public function update(elapsed:Float)
 	{
+
 
 
 
@@ -4101,6 +4120,7 @@ class PlayState extends MusicBeatState
 
 			}
 
+			
 
 		/*if (FlxG.keys.justPressed.NINE)
 		{
@@ -4791,20 +4811,14 @@ class PlayState extends MusicBeatState
 						removeStatics();
 						generateStaticArrows(0);
 						generateStaticArrows(1);
-						for (i in notes)
+						for (i in strumLineNotes)
 							{
 	
 								i.reloadNote();	
 	
 	
 							}
-						for (i in unspawnNotes)
-							{
-	
-								i.reloadNote();	
-	
-	
-							}
+
 
 						aspectRatio = true;
 						isFixedAspectRatio = true;
@@ -4853,7 +4867,7 @@ class PlayState extends MusicBeatState
 							FlxG.resizeGame(1280, 720);
 							FlxG.resizeWindow(1280, 720);
 
-							for (i in unspawnNotes)
+							for (i in strumLineNotes)
 								{
 		
 									i.reloadNote();	
@@ -5110,12 +5124,26 @@ class PlayState extends MusicBeatState
 						}
 				}
 
-				if (char != null)
+				switch (value1)
 				{
-					char.playAnim(value1, true);
-					char.specialAnim = true;
-				}
+					case 'end':
+						char.specialAnim = false;
+					case 'laugh':
+						if(char.curCharacter=='ycr' || char.curCharacter=='ycr-mad'){
+							camGame.zoom += 0.03;
+							camHUD.zoom += 0.06;
+						}
 
+						char.specialAnim = false;
+						char.playAnim(value1, true);
+						char.specialAnim = true;
+					default:
+						char.specialAnim = false;
+						char.playAnim(value1, true);
+						char.specialAnim = true;
+				}
+				case 'Chroma Video':
+					chromaVideo(value1);
 			case 'Camera Follow Pos':
 				var val1:Float = Std.parseFloat(value1);
 				var val2:Float = Std.parseFloat(value2);
@@ -6180,7 +6208,7 @@ class PlayState extends MusicBeatState
 
 		if (dad.curCharacter == 'starved')
 			{
-				fearNo += 0.1;
+				fearNo += 0.125;
 				// trace(fearNo);
 			}
 
@@ -6324,6 +6352,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
+
+
+
 	function majinSaysFuck(numb:Int):Void
 		{
 			switch(numb)
@@ -6652,6 +6683,13 @@ class PlayState extends MusicBeatState
 					generateStaticArrows(0);
 					generateStaticArrows(1);
 					FlxTween.tween(camHUD, {alpha: 1}, 0.5);		
+			}
+		}
+		if(curSong == 'endless-encore'){
+			switch(curStep){
+				case 1:
+					timeBar.createFilledBar(0xFF000000, 0xFF5f41a1);
+					timeBar.updateBar();	
 			}
 		}
 		if (SONG.song.toLowerCase() == 'prey')
