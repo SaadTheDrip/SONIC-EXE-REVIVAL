@@ -9,6 +9,16 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.system.FlxSound;
+#if sys
+import sys.FileSystem;
+import sys.io.File;
+#end
+
+#if VIDEOS_ALLOWED
+import vlc.MP4Handler;
+import vlc.MP4Sprite;
+#end
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -26,6 +36,8 @@ class GameOverSubstate extends MusicBeatSubstate
 	public static var endSoundName:String = 'gameOverEnd';
 
 	public static var instance:GameOverSubstate;
+
+
 
 	public static function resetVariables() {
 		characterName = 'bf-dead';
@@ -63,8 +75,24 @@ class GameOverSubstate extends MusicBeatSubstate
 		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
 		FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
+		switch (PlayState.SONG.song.toLowerCase())
+		{
+			default:
+				boyfriend.playAnim('firstDeath');
+			case "too-fest":
+				boyfriend.alpha = 0;
+				var video = new MP4Handler();
+				var file:String = Paths.video("SanicGameOvers/" + StringTools.replace(FileSystem.readDirectory(StringTools.replace(Paths.video("random"), "/random.mp4", "/SanicGameOvers"))[FlxG.random.int(0, FileSystem.readDirectory(StringTools.replace(Paths.video("random"), "/random.mp4", "/SanicGameOvers")).length)], ".mp4", ""));
 
-		boyfriend.playAnim('firstDeath');
+				trace("playing " + file);
+				video.playVideo(file); // LONGEST FUCKING LINE EVER
+			case "prey": 
+				boyfriend.playAnim('firstDeath');
+				boyfriend.x += 150;
+
+
+
+		}
 
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		camFollowPos.setPosition(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2));
@@ -115,7 +143,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 			if (boyfriend.animation.curAnim.finished && !playingDeathSound)
 			{
-				if (PlayState.SONG.stage == 'tank')
+				if (PlayState.SONG.song.toLowerCase() == 'chaos')
 				{
 					playingDeathSound = true;
 					coolStartDeath(0.2);
@@ -123,7 +151,7 @@ class GameOverSubstate extends MusicBeatSubstate
 					var exclude:Array<Int> = [];
 					//if(!ClientPrefs.cursing) exclude = [1, 3, 8, 13, 17, 21];
 
-					FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, exclude)), 1, false, null, true, function() {
+					FlxG.sound.play(Paths.sound('FleetLines/' + FlxG.random.int(1, 15, exclude)), 1, false, null, true, function() {
 						if(!isEnding)
 						{
 							FlxG.sound.music.fadeIn(0.2, 1, 4);
@@ -177,4 +205,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.instance.callOnLuas('onGameOverConfirm', [true]);
 		}
 	}
+
+	
 }

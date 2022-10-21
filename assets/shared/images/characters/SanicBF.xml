@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="SanicBF.png">
+	<!-- Created with Adobe Animate version 19.2.0.405 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Down0000" x="0" y="0" width="358" height="179"/>
+	<SubTexture name="Idle0000" x="358" y="0" width="310" height="306"/>
+	<SubTexture name="Left0000" x="668" y="0" width="274" height="274"/>
+	<SubTexture name="Miss0000" x="0" y="306" width="309" height="287"/>
+	<SubTexture name="Right0000" x="309" y="306" width="436" height="288"/>
+	<SubTexture name="Up0000" x="0" y="594" width="358" height="221"/>
+</TextureAtlas>
