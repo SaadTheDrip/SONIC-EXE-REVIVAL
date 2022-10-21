@@ -1077,13 +1077,15 @@ class PlayState extends MusicBeatState
 				GameOverSubstate.characterName = 'bf-fleetway-die';
 				GameOverSubstate.deathSoundName = 'fleetway-laser';
 				GameOverSubstate.loopSoundName = 'chaos-loop';
+
+
 				wall = new FlxSprite(-2379.05, -1211.1);
 				wall.frames = Paths.getSparrowAtlas('Chamber/Wall');
-				wall.animation.addByPrefix('a', 'Wall instance 1');
+				wall.animation.addByPrefix('a', 'Wall instance 1', 24, true);
 				wall.animation.play('a');
-				wall.antialiasing = true;
-				wall.scrollFactor.set(1.1, 1.1);
+				wall.antialiasing = false;
 				add(wall);
+
 
 				floor = new FlxSprite(-2349, /*921.25*/ 1000);
 				floor.antialiasing = true;
@@ -1156,6 +1158,8 @@ class PlayState extends MusicBeatState
 				porker.animation.play('porkerbop', true);
 				porker.scrollFactor.set(1.4, 1);
 				porker.antialiasing = true;
+				porker.setGraphicSize(Std.int(porker.width * 0.7));
+
 
 
 			//	unfinished, ill do later
@@ -1731,6 +1735,13 @@ class PlayState extends MusicBeatState
 				flyState = 'sHover';
 
 				boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.9));
+
+			case 'chamber':
+				add(thechamber);
+				add(porker);
+
+				flyTarg = dad; // fucking smart genious and intellegent
+				flyState = 'sHover';
 			case 'starved-pixel':
 				add(stardustFloorPixel);
 
@@ -2284,6 +2295,8 @@ class PlayState extends MusicBeatState
 					if(gf != null) gf.playAnim('scared', true);
 					boyfriend.playAnim('scared', true);
 
+
+
 				case 'too-slow':
 					startVideo('tooslowcutscene1');
 
@@ -2318,48 +2331,7 @@ class PlayState extends MusicBeatState
 							}
 						});
 					});
-				case 'milk':
-					startCountdown();
-					add(blackFuck);
-					startCircle.loadGraphic(Paths.image('StartScreens/Sunky', 'exe'));
-					startCircle.scale.x = 0;
-					startCircle.x += 50;
-					add(startCircle);
-					new FlxTimer().start(0.6, function(tmr:FlxTimer)
-					{
-						FlxTween.tween(startCircle.scale, {x: 1}, 0.2, {ease: FlxEase.elasticOut});
-						FlxG.sound.play(Paths.sound('flatBONK', 'exe'));
-					});
 
-					new FlxTimer().start(1.9, function(tmr:FlxTimer)
-					{
-						FlxTween.tween(blackFuck, {alpha: 0}, 1, {
-							onComplete: function(twn:FlxTween)
-							{
-								remove(blackFuck);
-								blackFuck.destroy();
-							}
-						});
-						FlxTween.tween(startCircle, {alpha: 0}, 1, {
-							onComplete: function(twn:FlxTween)
-							{
-								remove(startCircle);
-								startCircle.destroy();
-							}
-						});
-					});
-
-					if (aspectRatio)
-					{
-					playerStrums.forEach(function(spr:FlxSprite)
-						{
-							spr.x -= 82;
-						});
-					opponentStrums.forEach(function(spr:FlxSprite)
-						{
-							spr.x += 82;
-						});
-					}
 				case 'senpai' | 'roses' | 'thorns':
 					if(daSong == 'roses') FlxG.sound.play(Paths.sound('ANGRY'));
 					schoolIntro(doof);
@@ -2376,8 +2348,79 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			startCountdown();
+
+			switch (daSong)
+			{
+				case 'personel':
+					camGame.alpha = 0;
+					startCountdown();
+				case 'soulless':
+					camGame.alpha = 0;
+					camHUD.alpha = 0;
+					startCountdown();
+
+
+				case 'chaos':
+					cinematicBars(true);
+					FlxG.camera.zoom = defaultCamZoom;
+					camHUD.visible = false;
+					dad.visible = false;
+					boyfriend.visible = false;
+					dad.setPosition(600, 400);
+					snapCamFollowToPos(900, 700);
+					// camFollowPos.setPosition(900, 700);
+					FlxG.camera.focusOn(camFollowPos.getPosition());
+					new FlxTimer().start(0.5, function(lol:FlxTimer)
+					{
+						if (true) // unclocked fleetway
+						{
+							new FlxTimer().start(1, function(lol:FlxTimer)
+							{
+								FlxTween.tween(FlxG.camera, {zoom: 1.5}, 3, {ease: FlxEase.cubeOut});
+								FlxG.sound.play(Paths.sound('robot', 'exe'));
+								FlxG.camera.flash(FlxColor.RED, 0.2);
+							});
+							new FlxTimer().start(2, function(lol:FlxTimer)
+							{
+								FlxG.sound.play(Paths.sound('sonic', 'exe'));
+								thechamber.animation.play('a');
+							});
+
+							new FlxTimer().start(3.2, function(lol:FlxTimer)
+							{
+								boyfriendGroup.remove(boyfriend);
+								var oldbfx = boyfriend.x;
+								var oldbfy = boyfriend.y;
+								boyfriend = new Boyfriend(oldbfx, oldbfy, 'bf-super');
+								boyfriendGroup.add(boyfriend);
+								boyfriendGroup.remove(boyfriend);
+
+								var oldbfx = boyfriend.x;
+								var oldbfy = boyfriend.y;
+								boyfriend = new Boyfriend(oldbfx, oldbfy, 'bf');
+							});
+
+							new FlxTimer().start(6, function(lol:FlxTimer)
+							{
+								startCountdown();
+								FlxG.sound.play(Paths.sound('beam', 'exe'));
+								FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.2, {ease: FlxEase.cubeOut});
+								FlxG.camera.shake(0.02, 0.2);
+								FlxG.camera.flash(FlxColor.WHITE, 0.2);
+								floor.animation.play('b');
+								fleetwaybgshit.animation.play('b');
+								pebles.animation.play('b');
+								emeraldbeamyellow.visible = true;
+								emeraldbeam.visible = false;
+							});
+						}
+						else
+							lol.reset();
+					});
+
 		}
+	}
+	
 		RecalculateRating();
 
 		//PRECACHING MISS SOUNDS BECAUSE I THINK THEY CAN LAG PEOPLE AND FUCK THEM UP IDK HOW HAXE WORKS
@@ -6669,7 +6712,134 @@ class PlayState extends MusicBeatState
 		{
 			resyncVocals();
 		}
+		if (curSong == 'chaos')
+		{
+			if (curStep == 16)
+			{
+				dad.playAnim('fastanim', true);
+				dad.specialAnim = true;
+				//	dad.nonanimated = true;
 
+				FlxTween.tween(dad, {x: 61.15, y: -94.75}, 2, {ease: FlxEase.cubeOut});
+			}
+			else if (curStep == 1)
+			{
+				boyfriendGroup.add(boyfriend);
+				// https://twitter.com/averyavary/status/1515991304286707712
+
+				// wow this is inefficent but change character fucks everything up royally
+			}
+			else if (curStep == 9)
+			{
+				dad.visible = true;
+				FlxTween.tween(dad, {y: dad.y - 500}, 0.5, {ease: FlxEase.cubeOut});
+			}
+			else if (curStep == 64)
+			{
+				//	dad.nonanimated = false;
+				dad.specialAnim = false;
+				boyfriend.visible = true;
+				tailscircle = 'hovering';
+				camHUD.visible = true;
+				camHUD.alpha = 0;
+				cinematicBars(false);
+				FlxTween.tween(camHUD, {alpha: 1}, 0.2, {ease: FlxEase.cubeOut});
+			}
+
+			switch (curStep)
+			{ // silencing the unused pattern thing
+				case 380, 509, 637, 773, 1033, 1149, 1261, 1543, 1672, 1792, 1936:
+					tailscircle = '';
+					FlxTween.tween(dad, {x: 61.15, y: -94.75}, 0.2);
+					dad.setPosition(61.15, -94.75);
+			}
+			switch (curStep)
+			{
+				case 398, 527, 655, 783, 1039, 1167, 1295, 1551, 1679, 1807, 1951:
+					dadGroup.remove(dad);
+					var olddx = dad.x;
+					var olddy = dad.y;
+					dad = new Character(olddx, olddy, 'fleetway');
+					dadGroup.add(dad);
+					dad.specialAnim = false;
+					tailscircle = 'hovering';
+
+				case 1008:
+					boyfriendGroup.remove(boyfriend);
+					var oldbfx = boyfriend.x - 10;
+					var oldbfy = boyfriend.y - 225;
+					boyfriend = new Boyfriend(oldbfx, oldbfy, 'bf-super');
+					boyfriendGroup.add(boyfriend);
+
+					FlxG.camera.shake(0.02, 0.2);
+					FlxG.camera.flash(FlxColor.YELLOW, 0.2);
+
+					FlxG.sound.play(Paths.sound('SUPERBF', 'exe'));
+
+					boyfriend.scrollFactor.set(1.1, 1);
+
+				case 1260, 1543, 1672, 1792, 1936:
+					dadGroup.remove(dad);
+					var olddx = dad.x;
+					var olddy = dad.y;
+					dad = new Character(olddx, olddy, 'fleetway-anims2');
+					dadGroup.add(dad);
+					switch (curStep)
+					{
+						case 1260:
+							dad.playAnim('Ill show you', true);
+							dad.specialAnim = true;
+
+						case 1543:
+							dad.playAnim('AAAA', true);
+							dad.specialAnim = true;
+
+						case 1672:
+							dad.playAnim('Growl', true);
+							dad.specialAnim = true;
+
+						case 1792:
+							dad.playAnim('Shut up', true);
+							dad.specialAnim = true;
+
+						case 1936:
+							dad.playAnim('Right Alt', true);
+							dad.specialAnim = true;
+					}
+				case 383, 512, 640, 776, 1036, 1152:
+					dadGroup.remove(dad);
+					var olddx = dad.x;
+					var olddy = dad.y;
+					dad = new Character(olddx, olddy, 'fleetway-anims3');
+					dadGroup.add(dad);
+					switch (curStep)
+					{
+						case 383:
+							dad.playAnim('Step it up', true);
+							dad.specialAnim = true;
+
+						case 512:
+							dad.playAnim('lmao', true);
+							dad.specialAnim = true;
+
+						case 640:
+							dad.playAnim('fatphobia', true);
+							dad.specialAnim = true;
+
+						case 776:
+							dad.playAnim('Finished', true);
+							dad.specialAnim = true;
+
+						case 1036:
+							dad.playAnim('WHAT', true);
+							dad.specialAnim = true;
+
+						case 1152:
+							dad.playAnim('Grrr', true);
+							dad.specialAnim = true;
+					}
+			}
+		}
 		if(curSong == 'endless'){
 			switch(curStep){
 				case 1:
