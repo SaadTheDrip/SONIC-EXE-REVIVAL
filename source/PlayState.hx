@@ -4898,6 +4898,10 @@ class PlayState extends MusicBeatState
 						genesis.visible = true;
 						sonicHUD.visible=false;
 
+						scoreTxt.visible= true;
+						timeBar.visible = true;
+						timeBarBG.visible = true;
+						timeTxt.visible = true;
 
 						reloadHealthBarColors();
 
@@ -6770,6 +6774,9 @@ class PlayState extends MusicBeatState
 					dad.specialAnim = false;
 					tailscircle = 'hovering';
 
+					trace(dad.x);
+					trace(dad.x);
+
 				case 1008:
 					boyfriendGroup.remove(boyfriend);
 					var oldbfx = boyfriend.x - 10;
@@ -6790,6 +6797,9 @@ class PlayState extends MusicBeatState
 					var olddy = dad.y;
 					dad = new Character(olddx, olddy, 'fleetway-anims2');
 					dadGroup.add(dad);
+
+					trace(dad.x);
+					trace(dad.x);
 					switch (curStep)
 					{
 						case 1260:
@@ -6818,6 +6828,9 @@ class PlayState extends MusicBeatState
 					var olddy = dad.y;
 					dad = new Character(olddx, olddy, 'fleetway-anims3');
 					dadGroup.add(dad);
+
+					trace(dad.x);
+					trace(dad.x);
 					switch (curStep)
 					{
 						case 383:
@@ -6846,6 +6859,7 @@ class PlayState extends MusicBeatState
 					}
 			}
 		}
+
 		if(curSong == 'endless'){
 			switch(curStep){
 				case 1:
@@ -6965,12 +6979,17 @@ class PlayState extends MusicBeatState
 					}
 			}		
 
-			if (SONG.song.toLowerCase() == 'too-fest')
+			if (SONG.song.toLowerCase() == 'you-cant-run')
 				{
 					switch (curStep)
 						{
 
-								
+								case 784:
+
+									removeStatics();
+									generateStaticArrows(0);
+									generateStaticArrows(1);
+									
 
 						}
 				}
@@ -6991,7 +7010,9 @@ class PlayState extends MusicBeatState
 
 		setOnLuas('curStep', curStep);
 		callOnLuas('onStepHit', []);
-	}
+
+		}
+	
 
 	function festSpinFull()
 		{
