@@ -2272,6 +2272,8 @@ class PlayState extends MusicBeatState
 		{
 			switch (daSong)
 			{
+
+
 				case "monster":
 					var whiteScreen:FlxSprite = new FlxSprite(0, 0).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.WHITE);
 					add(whiteScreen);
@@ -2359,6 +2361,8 @@ class PlayState extends MusicBeatState
 					camHUD.alpha = 0;
 					startCountdown();
 
+				default:
+					startCountdown();
 
 				case 'chaos':
 					cinematicBars(true);
@@ -2419,6 +2423,8 @@ class PlayState extends MusicBeatState
 					});
 
 		}
+
+		
 	}
 	
 		RecalculateRating();
