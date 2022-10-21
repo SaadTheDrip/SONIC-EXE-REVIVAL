@@ -1741,7 +1741,7 @@ class PlayState extends MusicBeatState
 				add(porker);
 
 				flyTarg = dad; // fucking smart genious and intellegent
-				flyState = 'sHover';
+				flyState = 'hovering';
 			case 'starved-pixel':
 				add(stardustFloorPixel);
 
@@ -6768,14 +6768,14 @@ class PlayState extends MusicBeatState
 				case 398, 527, 655, 783, 1039, 1167, 1295, 1551, 1679, 1807, 1951:
 					dadGroup.remove(dad);
 					var olddx = dad.x;
-					var olddy = dad.y;
+					var olddy = -94.75;
 					dad = new Character(olddx, olddy, 'fleetway');
 					dadGroup.add(dad);
 					dad.specialAnim = false;
 					tailscircle = 'hovering';
 
-					trace(dad.x);
-					trace(dad.x);
+					trace(dad.y);
+
 
 				case 1008:
 					boyfriendGroup.remove(boyfriend);
@@ -6794,12 +6794,11 @@ class PlayState extends MusicBeatState
 				case 1260, 1543, 1672, 1792, 1936:
 					dadGroup.remove(dad);
 					var olddx = dad.x;
-					var olddy = dad.y;
+					var olddy = -94.75;
 					dad = new Character(olddx, olddy, 'fleetway-anims2');
 					dadGroup.add(dad);
 
-					trace(dad.x);
-					trace(dad.x);
+					trace(dad.y);
 					switch (curStep)
 					{
 						case 1260:
@@ -6825,12 +6824,12 @@ class PlayState extends MusicBeatState
 				case 383, 512, 640, 776, 1036, 1152:
 					dadGroup.remove(dad);
 					var olddx = dad.x;
-					var olddy = dad.y;
+					var olddy = -94.75;
 					dad = new Character(olddx, olddy, 'fleetway-anims3');
 					dadGroup.add(dad);
 
-					trace(dad.x);
-					trace(dad.x);
+
+					trace(dad.y);
 					switch (curStep)
 					{
 						case 383:
@@ -6984,7 +6983,7 @@ class PlayState extends MusicBeatState
 					switch (curStep)
 						{
 
-								case 784:
+								case 785:
 
 									removeStatics();
 									generateStaticArrows(0);
