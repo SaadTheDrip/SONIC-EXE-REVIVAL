@@ -1752,7 +1752,7 @@ class PlayState extends MusicBeatState
 					dad.y -= 350;	
 
 					flyTarg = dad; // fucking smart genious and intellegent
-					flyState = 'hover';		
+					flyState = 'shover';		
 			case 'limo':
 				resetFastCar();
 				addBehindGF(fastCar);
