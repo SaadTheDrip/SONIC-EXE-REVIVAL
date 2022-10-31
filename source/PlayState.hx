@@ -1741,7 +1741,7 @@ class PlayState extends MusicBeatState
 				add(porker);
 
 				flyTarg = dad; // fucking smart genious and intellegent
-				flyState = 'hovering';
+				flyState = 'hover';
 			case 'starved-pixel':
 				add(stardustFloorPixel);
 
