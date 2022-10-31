@@ -1749,7 +1749,10 @@ class PlayState extends MusicBeatState
 					// boyfriend.x -= 500;
 					boyfriend.y += 75;
 					dad.x += 300;
-					dad.y -= 350;			
+					dad.y -= 350;	
+
+					flyTarg = dad; // fucking smart genious and intellegent
+					flyState = 'hover';		
 			case 'limo':
 				resetFastCar();
 				addBehindGF(fastCar);
@@ -2163,7 +2166,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if(sonicHUDSongs.contains(SONG.song.toLowerCase())){
-			scoreTxt.visible=false;
+			scoreTxt.visible = false;
 			timeBar.visible = showTime;
 			timeTxt.visible=showTime;
 			timeBarBG.visible=showTime;
