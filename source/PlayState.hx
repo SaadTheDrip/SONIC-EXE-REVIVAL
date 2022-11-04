@@ -284,6 +284,17 @@ class PlayState extends MusicBeatState
 	var fgTrees:BGSprite;
 	var genesis:FlxTypedGroup<FlxSprite>;
 
+		// - xenophanes
+		var vg:FlxSprite;
+		var p3staticbg:FlxSprite;
+		var backtreesXeno:BGSprite;
+		var fgTree1Xeno:BGSprite;
+		var fgTree2Xeno:BGSprite;
+		var grassXeno:BGSprite;
+		var flooooor:FlxSprite;
+		var fgTree1:BGSprite;
+		var fgTree2:BGSprite;
+
 	// - dad 2 things (namely needlemouse)
 	public var dad2:Character;
 	public var dad2Group:FlxSpriteGroup; // going to use this for needle/sarah (avery)
@@ -956,6 +967,49 @@ class PlayState extends MusicBeatState
 				add(pickle);
 				add(pickle2);
 
+				case 'trioStage':
+					var sky:BGSprite = new BGSprite('Phase3/normal/glitch', -621.1, -395.65, 1.0, 1.0);
+					sky.active = false;
+					add(sky);
+	
+					var backbush:BGSprite = new BGSprite('Phase3/normal/BackBush', -621.1, -395.65, 1.0, 1.0);
+					backbush.active = false;
+					add(backbush);
+	
+					var treeback:BGSprite = new BGSprite('Phase3/normal/TTTrees', -621.1, -395.65, 1.0, 1.0);
+					treeback.active = false;
+					add(treeback);
+	
+					var topbushes:BGSprite = new BGSprite('Phase3/normal/TopBushes', -621.1, -395.65, 1.0, 1.0);
+					topbushes.active = false;
+					add(topbushes);
+	
+					fgTree1 = new BGSprite('Phase3/normal/FGTree1', -621.1, -395.65, 0.7, 0.7);
+					fgTree1.active = false;
+	
+	
+					fgTree2 = new BGSprite('Phase3/normal/FGTree2', -621.1, -395.65, 0.7, 0.7);
+					fgTree2.active = false;
+	
+					p3staticbg = new FlxSprite(0, 0).loadGraphic(Paths.image("Phase3/NewTitleMenuBg"));
+					p3staticbg.frames = Paths.getSparrowAtlas('NewTitleMenuBG');
+					p3staticbg.animation.addByPrefix('idle', "TitleMenuSSBG instance 1", 24);
+					p3staticbg.animation.play('idle');
+					p3staticbg.screenCenter();
+					p3staticbg.scale.x = 4.5;
+					p3staticbg.scale.y = 4.5;
+					p3staticbg.visible = false;
+					add(p3staticbg);
+	
+					backtreesXeno = new BGSprite('Phase3/xeno/BackTrees', -621.1, -395.65, 1.0, 1.0);
+					backtreesXeno.active = false;
+					backtreesXeno.visible = false;
+					add(backtreesXeno);
+	
+					grassXeno = new BGSprite('Phase3/xeno/Grass', -621.1, -395.65, 1.0, 1.0);
+					grassXeno.active = false;
+					grassXeno.visible = false;
+					add(grassXeno);
 			
 			case 'sanicStage':
 				var bg:BGSprite = new BGSprite('sanicbg', -370, -130, 1.0, 1.0);
@@ -1568,6 +1622,10 @@ class PlayState extends MusicBeatState
 
 				add(fgmajin);
 				add(fgmajin2);
+			case 'trioStage':
+				gfGroup.visible = false;
+				add(fgTree1);
+				add(fgTree2);
 
 			case 'xterion' | 'starved-pixel' | 'starved' | 'chamber' | 'sanicStage' | 'void' | 'fatality' | 'cycles-hills':
 				gfGroup.visible = false;
