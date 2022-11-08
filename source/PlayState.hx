@@ -323,7 +323,7 @@ class PlayState extends MusicBeatState
 	public var sonicHUDStyles:Map<String, String> = [
 
 		"fatality" => "sonic3",
-		"prey" => "soniccd",
+		"prey" => "debug",
 		"you-cant-run" => "sonic1", // because its green hill zone so it should be sonic1
 		"you-cant-run-encore" => "sonic1", // because its green hill zone so it should be sonic1
 		"our-horizon" => "chaotix",
@@ -867,6 +867,9 @@ class PlayState extends MusicBeatState
 				wendysLight = new BGSprite('starved/light', 0, 0, 1, 0.9);
 				wendysLight.setGraphicSize(Std.int(wendysLight.width * 1.2));
 			case 'endless-forest': // lmao
+
+				GameOverSubstate.loopSoundName = 'Endless-loop';
+				GameOverSubstate.endSoundName = 'Endless-retry';
 				PlayState.SONG.splashSkin = 'noteSplashes';
 				var SKY:BGSprite = new BGSprite('FunInfiniteStage/sonicFUNsky', -600, -200, 1.0, 1.0);
 				add(SKY);
@@ -4131,6 +4134,7 @@ class PlayState extends MusicBeatState
 
 		super.onFocusLost();
 	}
+
 
 	function resyncVocals():Void
 	{
