@@ -46,6 +46,8 @@ class FreeplayState extends MusicBeatState
 
 	private var iconArray:Array<HealthIcon> = [];
 
+	var burningrandom:Int = Std.random(50);
+
 	var bg:FlxSprite;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
@@ -374,9 +376,26 @@ class FreeplayState extends MusicBeatState
 			}*/
 			trace(poop);
 
+			if (burningrandom == 1)
+			{
+	
+				trace(burningrandom);
+					PlayState.SONG = Song.loadFromJson('burning-hard', 'burning');
+
+					PlayState.isStoryMode = false;
+
+			}		
+	
+	
+	
+			else{	
+
+				trace(burningrandom);
 			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
+
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
+			}
 
 			trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
 			if(colorTween != null) {
@@ -392,7 +411,9 @@ class FreeplayState extends MusicBeatState
 			FlxG.sound.music.volume = 0;
 					
 			destroyFreeplayVocals();
+		
 		}
+	
 		else if(controls.RESET)
 		{
 			persistentUpdate = false;
