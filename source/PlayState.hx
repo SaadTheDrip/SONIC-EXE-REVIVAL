@@ -6948,6 +6948,7 @@ class PlayState extends MusicBeatState
 					canDodge = true;
 				case 272:
 					dodgething.visible = false;
+					canDodge = false;
 				case 398, 527, 655, 783, 1039, 1167, 1295, 1551, 1679, 1807, 1951:
 					dadGroup.remove(dad);
 					var olddx = dad.x;
