@@ -355,6 +355,10 @@ class PlayState extends MusicBeatState
 	var warning:FlxSprite;
 	var dodgething:FlxSprite;
 
+		// - dodge mechanic bullshit
+		var canDodge:Bool = false;
+		var dodging:Bool = false;
+
 	var shit:Bool = false;
 
 	// Preload vars so no null obj ref
@@ -2066,6 +2070,30 @@ class PlayState extends MusicBeatState
 						add(fearUi);
 
 					}
+					if (SONG.song.toLowerCase() == 'chaos')
+						{
+							/*warning = new FlxSprite();
+							warning.frames = Paths.getSparrowAtlas('Warning', 'exe');
+							warning.cameras = [camHUD];
+							warning.scale.set(0.5, 0.5);
+							warning.screenCenter();
+							warning.animation.addByPrefix('a', 'Warning Flash', 24, false);
+							add(warning);*/
+			
+							dodgething = new FlxSprite(0, 600);
+							dodgething.frames = Paths.getSparrowAtlas('spacebar_icon', 'exe');
+							dodgething.animation.addByPrefix('a', 'spacebar', 24, false, true);
+							//dodgething.flipX = true;
+							dodgething.scale.x = .5;
+							dodgething.scale.y = .5;
+							dodgething.screenCenter();
+							dodgething.x -= 60;
+			
+							//warning.visible = false;
+							dodgething.visible = false;
+			
+							add(dodgething);
+						}
 
 		if(sonicHUDStyles.exists(SONG.song.toLowerCase()))hudStyle = sonicHUDStyles.get(SONG.song.toLowerCase());
 		var hudFolder = hudStyle;
@@ -2269,6 +2297,12 @@ class PlayState extends MusicBeatState
 				fearBar.cameras = [camHUD];
 				fearUi.cameras = [camHUD];
 			}
+			if (SONG.song.toLowerCase() == 'chaos')
+				{
+					//warning.cameras = [camHUD];
+					dodgething.cameras = [camHUD];
+				}
+		
 
 		sonicHUD.cameras = [camOther];
 		blackFuck.cameras = [camOther];
@@ -3967,6 +4001,54 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
+		function laserThingy(first:Bool)
+			{
+				var s:Int = 0;
+		
+				// FlxG.sound.play(Paths.sound('laser'));
+		
+		
+				new FlxTimer().start(0, function(a:FlxTimer)
+				{
+					s++;
+					//warning.visible = true;
+					dodgething.visible = true;
+		
+					/*warning.animation.play('a', true);
+					if (s < 4)
+					{
+						dodgething.animation.play('a', true);
+						a.reset(0.32);
+					}
+					else
+					{
+						remove(warning);
+					}*/
+					if (s == 3)
+					{
+						dadGroup.remove(dad);
+						var olddx = dad.x;
+						var olddy = dad.y;
+						dad = new Character(olddx, olddy, 'fleetwaylaser');
+						dadGroup.add(dad);
+						tailscircle = '';
+						dad.playAnim('Laser Blast', true);
+						dad.animation.finishCallback = function(a:String)
+						{
+							/*dadGroup.remove(dad);
+							var olddx = dad.x;
+							var olddy = dad.y;
+							dad = new Character(olddx, olddy, 'fleetway');
+							dadGroup.add(dad);*/
+							tailscircle = 'hovering';
+						}
+					}
+					else if (s == 4)
+					{
+						remove(dodgething);
+					}
+				});
+			}
 
 		function cinematicBars(appear:Bool) //IF (TRUE) MOMENT?????
 			{
@@ -4234,7 +4316,34 @@ class PlayState extends MusicBeatState
 
 			}
 
-			
+	if (canDodge && FlxG.keys.justPressed.SPACE)
+		{
+			dodging = true;
+			boyfriend.playAnim('dodge', true);
+			boyfriend.specialAnim = true;
+
+			boyfriend.animation.finishCallback = function(a:String)
+			{
+				if(a == 'dodge'){
+					new FlxTimer().start(0.5, function(a:FlxTimer)
+					{
+						dodging = false;
+						canDodge = false;
+						boyfriend.specialAnim = false;
+						trace('didnt die?');
+						// im using bandage method for this shit cus it keeps breaking for some unholy reason
+						// fleetway you make me want to kill myself i swear to god
+					});
+				}
+			}
+		}
+	else if (canDodge && !FlxG.keys.justPressed.SPACE) {
+		new FlxTimer().start(0.5, function(a:FlxTimer)
+			{
+			health -= 9999;
+			trace('skill issue');
+			});
+			}
 
 		/*if (FlxG.keys.justPressed.NINE)
 		{
@@ -6830,6 +6939,11 @@ class PlayState extends MusicBeatState
 			}
 			switch (curStep)
 			{
+				case 256:
+					laserThingy(true);
+					canDodge = true;
+				case 272:
+					dodgething.visible = false;
 				case 398, 527, 655, 783, 1039, 1167, 1295, 1551, 1679, 1807, 1951:
 					dadGroup.remove(dad);
 					var olddx = dad.x;
