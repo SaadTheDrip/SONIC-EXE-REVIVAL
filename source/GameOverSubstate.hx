@@ -151,7 +151,7 @@ class GameOverSubstate extends MusicBeatSubstate
 					var exclude:Array<Int> = [];
 					//if(!ClientPrefs.cursing) exclude = [1, 3, 8, 13, 17, 21];
 
-					FlxG.sound.play(Paths.sound('FleetLines/' + FlxG.random.int(1, 15, exclude)), 1, false, null, true, function() {
+					FlxG.sound.play(Paths.sound('FleetLines/' + FlxG.random.int(1, 11, exclude)), 1, false, null, true, function() {
 						if(!isEnding)
 						{
 							FlxG.sound.music.fadeIn(0.2, 1, 4);

@@ -4033,6 +4033,7 @@ class PlayState extends MusicBeatState
 						dadGroup.add(dad);
 						tailscircle = '';
 						dad.playAnim('Laser Blast', true);
+						trace('laser real');
 						dad.animation.finishCallback = function(a:String)
 						{
 							/*dadGroup.remove(dad);
@@ -4340,8 +4341,11 @@ class PlayState extends MusicBeatState
 	else if (canDodge && !FlxG.keys.justPressed.SPACE) {
 		new FlxTimer().start(0.5, function(a:FlxTimer)
 			{
-			health -= 9999;
-			trace('skill issue');
+			if (!dodging) 
+				{
+				health -= 9999;
+				trace('skill issue');
+				}
 			});
 			}
 
