@@ -24,6 +24,8 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import Controls;
+import flixel.addons.display.FlxBackdrop;
+
 
 using StringTools;
 
@@ -44,6 +46,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	public var title:String;
 	public var rpcTitle:String;
 
+	var bg:FlxBackdrop = new FlxBackdrop(Paths.image('backgroundlool'), 0.2, 0.2, true, true);
+
+
 	public function new()
 	{
 		super();
@@ -54,12 +59,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		#if desktop
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
-		
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
+
+		add(bg);
+		bg.scrollFactor.set(0, 0.07);
+
 
 		// avoids lagspikes while scrolling through menus!
 		grpOptions = new FlxTypedGroup<Alphabet>();
@@ -135,6 +139,10 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	var holdValue:Float = 0;
 	override function update(elapsed:Float)
 	{
+
+		bg.x -= 0.45 / (ClientPrefs.framerate / 60);
+		bg.y -= 0.16 / (ClientPrefs.framerate / 60);
+		
 		if (controls.UI_UP_P)
 		{
 			changeSelection(-1);
@@ -266,6 +274,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if(nextAccept > 0) {
 			nextAccept -= 1;
 		}
+
+
 		super.update(elapsed);
 	}
 
