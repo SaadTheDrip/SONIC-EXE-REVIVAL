@@ -23,6 +23,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
+import flixel.addons.display.FlxBackdrop;
 import Controls;
 
 using StringTools;
@@ -33,6 +34,8 @@ class OptionsState extends MusicBeatState
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
+
+	var bg:FlxBackdrop = new FlxBackdrop(Paths.image('backgroundlool'), 0.2, 0.2, true, true);
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
@@ -59,16 +62,13 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
-		bg.updateHitbox();
-
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
+
+		add(bg);
+		bg.scrollFactor.set(0, 0.07);
 
 		for (i in 0...options.length)
 		{
@@ -112,6 +112,9 @@ class OptionsState extends MusicBeatState
 		if (controls.ACCEPT) {
 			openSelectedSubstate(options[curSelected]);
 		}
+
+		bg.x -= 0.45 / (ClientPrefs.framerate / 60);
+		bg.y -= 0.16 / (ClientPrefs.framerate / 60);
 	}
 	
 	function changeSelection(change:Int = 0) {
