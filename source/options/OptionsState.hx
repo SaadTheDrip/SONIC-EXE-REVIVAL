@@ -192,14 +192,6 @@ class OptionsState extends MusicBeatState
 				item.alpha = 0.6;
 			}
 		}
-		grpBox.forEach(function(spr:FlxSprite) {
-			if (curSelected == spr.ID) {
-                spr.loadGraphic(Paths.image('options/curSelected'));
-			}
-			else {
-				spr.loadGraphic(Paths.image('options/other'));
-			}
-		});
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 }
