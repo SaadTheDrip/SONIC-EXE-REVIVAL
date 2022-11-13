@@ -24,16 +24,25 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import flixel.addons.display.FlxBackdrop;
+import flixel.FlxCamera;
+import flixel.FlxObject;
 import Controls;
+import flixel.text.FlxText;
 
 using StringTools;
 
 class OptionsState extends MusicBeatState
 {
 	var options:Array<String> = ['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'];
-	private var grpOptions:FlxTypedGroup<Alphabet>;
+	private var grpOptions:FlxTypedGroup<FlxText>;
+	private var grpBox:FlxTypedGroup<FlxSprite>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
+
+	var camFollowPos:FlxObject;
+	var camFollow:FlxObject;
+
+
 
 	var bg:FlxBackdrop = new FlxBackdrop(Paths.image('backgroundlool'), 0.2, 0.2, true, true);
 
@@ -54,34 +63,76 @@ class OptionsState extends MusicBeatState
 		}
 	}
 
-	var selectorLeft:Alphabet;
-	var selectorRight:Alphabet;
+	var selectorLeft:FlxSprite;
+	var selectorRight:FlxSprite;
 
 	override function create() {
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
+		
+
+		camFollow = new FlxObject(0, 0, 1, 1);
+		camFollowPos = new FlxObject(0, 0, 1, 1);
+		add(camFollow);
+		add(camFollowPos);
+
+
 		add(bg);
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
+		grpOptions = new FlxTypedGroup<FlxText>();
 		add(grpOptions);
+
+		
+
+		grpBox = new FlxTypedGroup<FlxSprite>();
+		add(grpBox);
+
+		
+
+		for (i in 0...options.length) {
+			var optionBox:FlxSprite = new FlxSprite();
+			optionBox.loadGraphic(Paths.image('options/other'));
+			optionBox.screenCenter(X);
+			optionBox.y += (100 * (i - (options.length / 2))) + 50;
+			optionBox.scale.set(6, 6);
+			optionBox.antialiasing = false;
+			//grpBox.add(optionBox); looks so bad :sob:
+			grpBox.ID = i;
+		}
 
 		add(bg);
 		bg.scrollFactor.set(0, 0.07);
 
 		for (i in 0...options.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
+			var optionText:FlxText = new FlxText();
+			optionText.text = options[i];
+			optionText.setFormat(Paths.font('sonic-cd-menu-font.ttf'), 32);
 			optionText.screenCenter();
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
+			optionText.ID = i;
 		}
 
-		selectorLeft = new Alphabet(0, 0, '>', true, false);
+
+
+		selectorLeft = new FlxSprite();
+		selectorLeft.loadGraphic(Paths.image('options/arrow'));
 		add(selectorLeft);
-		selectorRight = new Alphabet(0, 0, '<', true, false);
+
+		selectorRight = new FlxSprite();
+		selectorRight.loadGraphic(Paths.image('options/arrow'));
+		selectorRight.flipX = true;
 		add(selectorRight);
+
+		selectorRight.scale.set(6, 6);
+		selectorLeft.scale.set(6, 6);
+
+		grpBox.forEach(function(spr:FlxSprite) {
+			spr.y += 150;
+		});
 
 		changeSelection();
 		ClientPrefs.saveSettings();
@@ -96,6 +147,10 @@ class OptionsState extends MusicBeatState
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
+
+		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
+
+		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
 		if (controls.UI_UP_P) {
 			changeSelection(-1);
@@ -124,21 +179,29 @@ class OptionsState extends MusicBeatState
 		if (curSelected >= options.length)
 			curSelected = 0;
 
-		var bullShit:Int = 0;
 
 		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
 
 			item.alpha = 0.6;
-			if (item.targetY == 0) {
+			if (item.ID == curSelected) {
 				item.alpha = 1;
 				selectorLeft.x = item.x - 63;
 				selectorLeft.y = item.y;
 				selectorRight.x = item.x + item.width + 15;
 				selectorRight.y = item.y;
 			}
+			else {
+				item.alpha = 0.6;
+			}
 		}
+		grpBox.forEach(function(spr:FlxSprite) {
+			if (curSelected == spr.ID) {
+                spr.loadGraphic(Paths.image('options/curSelected'));
+			}
+			else {
+				spr.loadGraphic(Paths.image('options/other'));
+			}
+		});
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 }
