@@ -130,10 +130,6 @@ class OptionsState extends MusicBeatState
 		selectorRight.scale.set(6, 6);
 		selectorLeft.scale.set(6, 6);
 
-		grpBox.forEach(function(spr:FlxSprite) {
-			spr.y += 150;
-		});
-
 		changeSelection();
 		ClientPrefs.saveSettings();
 
@@ -187,8 +183,10 @@ class OptionsState extends MusicBeatState
 				item.alpha = 1;
 				selectorLeft.x = item.x - 63;
 				selectorLeft.y = item.y;
+				selectorLeft.y += 25;
 				selectorRight.x = item.x + item.width + 15;
 				selectorRight.y = item.y;
+				selectorRight.y += 25; // offset
 			}
 			else {
 				item.alpha = 0.6;
