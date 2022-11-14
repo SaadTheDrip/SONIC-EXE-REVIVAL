@@ -518,6 +518,7 @@ class TitleState extends MusicBeatState
 				}
 			else if(pressedEnter)
 			{
+				var shitAlreadyDone:Bool = false;
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 				
@@ -529,21 +530,24 @@ class TitleState extends MusicBeatState
 				transitioning = true;
 				FlxG.sound.music.stop();
 
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					var video:MP4Handler = new MP4Handler();
-					video.playVideo(Paths.video('bothCreditsAndIntro'));
-
-
-
-					video.finishCallback = function()
-					{
-						LoadingState.loadAndSwitchState(new MainMenuState());
-
-						FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-					}
-					closedState = true;
-				});
+				if (!shitAlreadyDone) {
+					new FlxTimer().start(1, function(tmr:FlxTimer)
+						{
+							var video:MP4Handler = new MP4Handler();
+							video.playVideo(Paths.video('bothCreditsAndIntro'));
+		
+		
+		
+							video.finishCallback = function()
+							{
+								LoadingState.loadAndSwitchState(new MainMenuState());
+		
+								FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+							}
+							closedState = true;
+							shitAlreadyDone = true;
+						});
+				}
 
 				// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 			}

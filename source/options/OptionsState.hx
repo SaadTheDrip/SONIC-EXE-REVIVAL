@@ -91,16 +91,7 @@ class OptionsState extends MusicBeatState
 
 		
 
-		for (i in 0...options.length) {
-			var optionBox:FlxSprite = new FlxSprite();
-			optionBox.loadGraphic(Paths.image('options/other'));
-			optionBox.screenCenter(X);
-			optionBox.y += (100 * (i - (options.length / 2))) + 50;
-			optionBox.scale.set(6, 6);
-			optionBox.antialiasing = false;
-			//grpBox.add(optionBox); looks so bad :sob:
-			grpBox.ID = i;
-		}
+		
 
 		add(bg);
 		bg.scrollFactor.set(0, 0.07);
@@ -113,7 +104,26 @@ class OptionsState extends MusicBeatState
 			optionText.screenCenter();
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
+	
+
+			
 			optionText.ID = i;
+		}
+
+		for (i in 0...options.length) {
+			var optionBox:FlxSprite = new FlxSprite();
+			optionBox.loadGraphic(Paths.image('options/box'));
+			optionBox.screenCenter(X);
+			optionBox.antialiasing = false;
+			optionBox.scale.set(1, 1.25); // a little more height
+			optionBox.ID = i;
+			grpBox.add(optionBox);
+		    
+			grpOptions.forEach(function(spr:FlxSprite) {
+				if (spr.ID == optionBox.ID) {
+					optionBox.y = spr.y;
+				}
+			});
 		}
 
 
@@ -143,6 +153,15 @@ class OptionsState extends MusicBeatState
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
+
+		grpBox.forEach(function(spr:FlxSprite) {
+			if (curSelected == spr.ID) {
+				spr.alpha = 1;
+			}
+			else {
+				spr.alpha = 0.6;
+			}
+		});
 
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
 
