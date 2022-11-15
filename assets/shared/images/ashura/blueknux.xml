@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="blueknux.png">
+	<!-- Created with Adobe Animate version 19.2.0.405 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="holy fuckles its blue knuckles0000" x="0" y="0" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0001" x="0" y="0" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0002" x="29" y="0" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0003" x="29" y="0" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0004" x="0" y="40" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0005" x="0" y="40" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0006" x="29" y="40" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0007" x="29" y="40" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0008" x="0" y="80" width="29" height="40"/>
+	<SubTexture name="holy fuckles its blue knuckles0009" x="0" y="80" width="29" height="40"/>
+</TextureAtlas>

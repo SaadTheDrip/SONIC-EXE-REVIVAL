@@ -2519,9 +2519,68 @@ class PlayState extends MusicBeatState
 						else
 							lol.reset();
 					});
+					case 'sunshine':
+						/*var startthingy:FlxSprite = new FlxSprite();
+	
+						startthingy.frames = Paths.getSparrowAtlas('TdollStart', 'exe');
+						startthingy.animation.addByPrefix('sus', 'Start', 24, false);
+						startthingy.cameras = [camHUD];
+						add(startthingy);
+						startthingy.screenCenter();*/
+						var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image('ready', 'exe'));
+						var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image('set', 'exe'));
+						var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image('go', 'exe'));
+	
+						ready.scale.x = 0.5; // i despise all coding.
+						set.scale.x = 0.5;
+						go.scale.x = 0.7;
+						ready.scale.y = 0.5;
+						set.scale.y = 0.5;
+						go.scale.y = 0.7;
+						ready.screenCenter();
+						set.screenCenter();
+						go.screenCenter();
+						ready.cameras = [camHUD];
+						set.cameras = [camHUD];
+						go.cameras = [camHUD];
+						var amongus:Int = 0;
+	
+	
+						new FlxTimer().start(1, function(tmr:FlxTimer)
+						{
+							switch (amongus)
+							{
+								case 0:
+									startCountdown();
+									add(ready);
+									FlxTween.tween(ready.scale, {x: .9, y: .9}, Conductor.crochet / 500);
+									FlxG.sound.play(Paths.sound('ready', 'exe'));
+								case 1:
+									ready.visible = false;
+									add(set);
+									FlxTween.tween(set.scale, {x: .9, y: .9}, Conductor.crochet / 500);
+									FlxG.sound.play(Paths.sound('set', 'exe'));
+								case 2:
+									set.visible = false;
+									add(go);
+									FlxTween.tween(go.scale, {x: 1.1, y: 1.1}, Conductor.crochet / 500);
+									FlxG.sound.play(Paths.sound('go', 'exe'));
+								case 3:
+									go.visible = false;
+									canPause = true;
+							}
+							amongus += 1;
+							if (amongus < 5)
+								tmr.reset(Conductor.crochet / 700);
+						});
 
 		}
-
+		switch (curSong)
+		{
+			case 'sunshine', 'chaos':
+			default:
+				startCountdown();
+		}
 		
 	}
 	
@@ -2574,7 +2633,22 @@ class PlayState extends MusicBeatState
 		}
 		Paths.clearUnusedMemory();
 		
-		CustomFadeTransition.nextCamera = camOther;
+		switch(SONG.song.toLowerCase()){
+			case 'sunshine':
+				transIn = OvalTransitionSubstate;
+			case 'cycles':
+				transIn = XTransitionSubstate;
+				transOut = XTransitionSubstate;
+			default:
+
+		}
+		var shapeTransState:ShapeTransitionSubstate = cast transIn;
+		var shapeTrans = (shapeTransState is ShapeTransitionSubstate);
+		if(shapeTrans){
+			ShapeTransitionSubstate.nextCamera = camOther;
+		}else{
+			FadeTransitionSubstate.nextCamera = camOther;
+		}
 	}
 
 	#if (!flash && sys)
