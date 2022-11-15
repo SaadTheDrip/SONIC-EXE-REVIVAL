@@ -2633,22 +2633,7 @@ class PlayState extends MusicBeatState
 		}
 		Paths.clearUnusedMemory();
 		
-		switch(SONG.song.toLowerCase()){
-			case 'sunshine':
-				transIn = OvalTransitionSubstate;
-			case 'cycles':
-				transIn = XTransitionSubstate;
-				transOut = XTransitionSubstate;
-			default:
-
-		}
-		var shapeTransState:ShapeTransitionSubstate = cast transIn;
-		var shapeTrans = (shapeTransState is ShapeTransitionSubstate);
-		if(shapeTrans){
-			ShapeTransitionSubstate.nextCamera = camOther;
-		}else{
-			FadeTransitionSubstate.nextCamera = camOther;
-		}
+		CustomFadeTransition.nextCamera = camOther;
 	}
 
 	#if (!flash && sys)
