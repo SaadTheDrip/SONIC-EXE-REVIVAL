@@ -4691,41 +4691,81 @@ class PlayState extends MusicBeatState
 			}
 		}
 		else
-		{
-			Conductor.songPosition += FlxG.elapsed * 1000;
-
-			if (!paused)
 			{
-				songTime += FlxG.game.ticks - previousFrameTime;
-				previousFrameTime = FlxG.game.ticks;
-
-				// Interpolation type beat
-				if (Conductor.lastSongPos != Conductor.songPosition)
+				Conductor.songPosition += elapsed * 1000;
+	
+				if (!paused)
 				{
-					songTime = (songTime + Conductor.songPosition) / 2;
-					Conductor.lastSongPos = Conductor.songPosition;
-					// Conductor.songPosition += FlxG.elapsed * 1000;
-					// trace('MISSED FRAME');
+					songTime += FlxG.game.ticks - previousFrameTime;
+					previousFrameTime = FlxG.game.ticks;
+	
+					// Interpolation type beat
+					if (Conductor.lastSongPos != Conductor.songPosition)
+					{
+						songTime = (songTime + Conductor.songPosition) / 2;
+						Conductor.lastSongPos = Conductor.songPosition;
+						// Conductor.songPosition += FlxG.elapsed * 1000;
+						// trace('MISSED FRAME');
+					}
+	
+					if (updateTime)
+					{
+						var curTime:Float = FlxG.sound.music.time - ClientPrefs.noteOffset;
+						if (curTime < 0)
+							curTime = 0;
+						songPercent = (curTime / songLength);
+	
+						var secondsTotal:Int = Math.floor((songLength - curTime) / 1000);
+						if (secondsTotal < 0)
+							secondsTotal = 0;
+	
+						var minutesRemaining:Int = Math.floor(secondsTotal / 60);
+						var secondsRemaining:String = '' + secondsTotal % 60;
+	
+						if (secondsRemaining.length < 2)
+							secondsRemaining = '0' + secondsRemaining; // Dunno how to make it display a zero first in Haxe lol
+	
+						if(SONG.song.toLowerCase()=='endless' && curStep>=898){
+							songPercent=0;
+							timeTxt.text = 'Infinity';
+						}else
+							timeTxt.text = minutesRemaining + ':' + secondsRemaining;
+	
+						var curMS:Float = Math.floor(curTime);
+						var curSex:Int = Math.floor(curMS / 1000);
+						if (curSex < 0)
+							curSex = 0;
+	
+					var curMins = Math.floor(curSex / 60);
+						curMS%=1000;
+					curSex%=60;
+	
+						minNumber.number = curMins;
+	
+						var sepSex = Std.string(curSex).split("");
+						if(curSex<10){
+							secondNumberA.number = 0;
+							secondNumberB.number = curSex;
+						}else{
+							secondNumberA.number = Std.parseInt(sepSex[0]);
+							secondNumberB.number = Std.parseInt(sepSex[1]);
+						}
+						if(millisecondNumberA!=null && millisecondNumberB!=null){
+							curMS = Math.round(curMS/10);
+							if(curMS<10){
+								millisecondNumberA.number = 0;
+								millisecondNumberB.number = Math.floor(curMS);
+							}else{
+								var sepMSex = Std.string(curMS).split("");
+								millisecondNumberA.number = Std.parseInt(sepMSex[0]);
+								millisecondNumberB.number = Std.parseInt(sepMSex[1]);
+							}
+						}
+					}
 				}
-
-				if(updateTime) {
-					var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
-					if(curTime < 0) curTime = 0;
-					songPercent = (curTime / songLength);
-
-					var songCalc:Float = (songLength - curTime);
-					if(ClientPrefs.timeBarType == 'Time Elapsed') songCalc = curTime;
-
-					var secondsTotal:Int = Math.floor(songCalc / 1000);
-					if(secondsTotal < 0) secondsTotal = 0;
-
-					if(ClientPrefs.timeBarType != 'Song Name')
-						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
-				}
+	
+				// Conductor.lastSongPos = FlxG.sound.music.time;
 			}
-
-			// Conductor.lastSongPos = FlxG.sound.music.time;
-		}
 
 		if (camZooming)
 		{
