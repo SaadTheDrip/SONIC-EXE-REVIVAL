@@ -63,33 +63,28 @@ class CoolUtil
 	}
 
 	public static function coolTextFile(path:String):Array<String>
-	{
-		var daList:Array<String> = [];
-		#if sys
-		if(FileSystem.exists(path)) daList = File.getContent(path).trim().split('\n');
-		#else
-		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
-		#end
-
-		for (i in 0...daList.length)
 		{
-			daList[i] = daList[i].trim();
+			var daList:Array<String> = Assets.getText(path).trim().split('\n');
+	
+			for (i in 0...daList.length)
+			{
+				daList[i] = daList[i].trim();
+			}
+			return daList;
 		}
-
-		return daList;
-	}
-	public static function listFromString(string:String):Array<String>
-	{
-		var daList:Array<String> = [];
-		daList = string.trim().split('\n');
-
-		for (i in 0...daList.length)
+	
+		public static function coolStringFile(path:String):Array<String>
 		{
-			daList[i] = daList[i].trim();
+			var daList:Array<String> = path.trim().split('\n');
+	
+			for (i in 0...daList.length)
+			{
+				daList[i] = daList[i].trim();
+			}
+	
+			return daList;
 		}
-
-		return daList;
-	}
+		
 	public static function dominantColor(sprite:flixel.FlxSprite):Int{
 		var countByColor:Map<Int, Int> = [];
 		for(col in 0...sprite.frameWidth){
