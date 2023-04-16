@@ -1,18 +1,15 @@
 package;
 
+import flixel.util.FlxSave;
 import flixel.FlxG;
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import flixel.system.FlxSound;
-
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-import lime.app.Application;
-import lime.graphics.Image;
-
 #else
 import openfl.utils.Assets;
 #end
@@ -63,28 +60,33 @@ class CoolUtil
 	}
 
 	public static function coolTextFile(path:String):Array<String>
+	{
+		var daList:Array<String> = [];
+		#if sys
+		if(FileSystem.exists(path)) daList = File.getContent(path).trim().split('\n');
+		#else
+		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
+		#end
+
+		for (i in 0...daList.length)
 		{
-			var daList:Array<String> = Assets.getText(path).trim().split('\n');
-	
-			for (i in 0...daList.length)
-			{
-				daList[i] = daList[i].trim();
-			}
-			return daList;
+			daList[i] = daList[i].trim();
 		}
-	
-		public static function coolStringFile(path:String):Array<String>
+
+		return daList;
+	}
+	public static function listFromString(string:String):Array<String>
+	{
+		var daList:Array<String> = [];
+		daList = string.trim().split('\n');
+
+		for (i in 0...daList.length)
 		{
-			var daList:Array<String> = path.trim().split('\n');
-	
-			for (i in 0...daList.length)
-			{
-				daList[i] = daList[i].trim();
-			}
-	
-			return daList;
+			daList[i] = daList[i].trim();
 		}
-		
+
+		return daList;
+	}
 	public static function dominantColor(sprite:flixel.FlxSprite):Int{
 		var countByColor:Map<Int, Int> = [];
 		for(col in 0...sprite.frameWidth){
@@ -137,9 +139,16 @@ class CoolUtil
 		FlxG.openURL(site);
 		#end
 	}
-	public static function setWindowIcon(image:String = 'iconOG') {
-		Image.loadFromFile(Paths.getPath('images/$image.png', IMAGE)).onComplete(function (img) {
-			Application.current.window.setIcon(img);
-		});
+
+	/** Quick Function to Fix Save Files for Flixel 5
+		if you are making a mod, you are gonna wanna change "ShadowMario" to something else
+		so Base Psych saves won't conflict with yours
+		@BeastlyGabi
+	**/
+	public static function getSavePath(folder:String = 'ShadowMario'):String {
+		@:privateAccess
+		return #if (flixel < "5.0.0") folder #else FlxG.stage.application.meta.get('company')
+			+ '/'
+			+ FlxSave.validate(FlxG.stage.application.meta.get('file')) #end;
 	}
 }
